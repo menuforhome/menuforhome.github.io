@@ -1,0 +1,855 @@
+<title>Домашнее меню</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito:wght@400;600;700;800&family=Unbounded:wght@500;700&family=Caveat:wght@600;700&display=swap">
+<style>
+/* Layout: печатное меню на тёплой бумаге. Крупный жирный заголовок, персиковая шапка с рисованным блюдом, цветные плашки разделов, строки с пунктирной линией до стрелки, у каждой группы своя иллюстрация. Один светлый вид, без тёмной темы. */
+:root{
+  color-scheme:light;
+  --paper:#FCF3E6; --paper-2:#F6E6D1; --card:#FFFAF2; --ink:#3B2418; --muted:#8A6B58; --line:#E6D0B8; --dot:#B98F70;
+  --accent:#D2553A; --accent-d:#B3412B; --on-accent:#FFF8EF;
+  --peach:#F9D8BA; --salmon:#F6BDA4; --butter:#F9E3A6; --rose:#F4CBC6; --sand:#EDDABF; --olive:#E4E2B4;
+  --tint-a:#FBE3DC; --tint-b:#FBF0D2;
+  --shadow:rgba(90,45,25,.22);
+  --f-head:'Dela Gothic One','Unbounded',Impact,'Arial Black',sans-serif;
+  --f-ui:'Unbounded','Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-body:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html.lock{overflow:hidden}
+body{background:var(--paper);color:var(--ink);font:16px/1.5 var(--f-body);-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+ul,ol{padding:0;list-style:none}
+svg{display:block}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* top bar and tabs */
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:12px 16px;padding-block:14px 4px}
+.brand{font-family:var(--f-head);font-size:clamp(22px,5.7vw,29px);line-height:1;color:var(--accent)}
+.search{position:relative;flex:0 1 220px;min-width:0}
+.search svg.si{position:absolute;left:12px;top:50%;translate:0 -50%;color:var(--muted);pointer-events:none}
+.search input{width:100%;font:inherit;font-size:15px;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:7px 34px;min-width:0}
+.search input::placeholder{color:var(--muted)}
+.search input::-webkit-search-cancel-button{display:none}
+.search .clr{position:absolute;right:3px;top:50%;translate:0 -50%;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--muted)}
+.navband{position:sticky;top:env(safe-area-inset-top,0px);z-index:8;background:var(--paper)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-block:8px 12px;scrollbar-width:none;scroll-snap-type:x proximity}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;scroll-snap-align:start;white-space:nowrap;font-family:var(--f-ui);font-weight:500;font-size:15.5px;padding:11px 19px;border-radius:999px;background:var(--paper-2);color:var(--ink)}
+.tab:hover{background:var(--peach)}
+.tab[aria-current="page"]{background:var(--accent);color:var(--on-accent);font-weight:700}
+main{padding-block:6px 64px;min-height:60vh}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--f-ui);font-weight:600;letter-spacing:-.01em;border-radius:999px;padding:13px 22px;font-size:13px;transition:background .15s,transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.cta{background:var(--accent);color:var(--on-accent)}
+.btn.cta:hover{background:var(--accent-d)}
+.btn.line{border:1.5px solid var(--accent);color:var(--accent-d);background:transparent;padding:9px 16px;font-size:11.5px}
+.btn.line:hover{background:var(--accent);color:var(--on-accent)}
+.btn.soft{background:var(--paper-2);color:var(--ink)}
+.btn.block{width:100%}
+
+/* home hero */
+.hero{position:relative;display:grid;grid-template-columns:1fr minmax(160px,300px);align-items:center;gap:8px 20px;background:var(--peach);border-radius:34px;padding:34px clamp(22px,4vw,48px);margin-top:6px;overflow:hidden}
+.hero .eyebrow{font-family:var(--f-ui);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d);margin-bottom:10px}
+.hero h1{font-family:var(--f-head);font-weight:400;font-size:clamp(34px,8vw,68px);line-height:1;color:var(--accent);text-wrap:balance;margin-bottom:24px}
+.hero .art{width:100%;max-width:300px;justify-self:end;rotate:-4deg}
+@media (max-width:560px){.hero{grid-template-columns:1fr;padding:26px 20px 22px}.hero .art{max-width:170px;justify-self:end;margin-top:-70px;margin-bottom:-6px}.hero .copy{position:relative;z-index:1}}
+.ribbon{overflow:hidden;margin-top:18px;padding:8px 0}
+.ribbon .track{display:flex;width:max-content;animation:rb 200s linear infinite}
+.ribbon .seg{display:flex;align-items:center;gap:14px;padding-right:14px;white-space:nowrap;font-family:var(--f-ui);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ribbon .seg b{color:var(--accent);font-weight:500}
+@keyframes rb{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ribbon .track{animation:none}}
+.sec-title{display:flex;align-items:center;gap:16px;margin:22px 0 14px}
+.sec-title h2{font-family:var(--f-head);font-weight:400;font-size:22px;color:var(--ink)}
+.sec-title i{flex:1;border-bottom:2px dotted var(--dot);opacity:.7}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (min-width:640px){.tiles{grid-template-columns:repeat(3,1fr);gap:16px}}
+.tile{position:relative;display:flex;align-items:flex-end;min-height:176px;background:var(--tb);border-radius:28px;padding:18px;overflow:hidden;transition:transform .15s}
+.tile:hover{transform:translateY(-3px)}
+.tile .tt{position:relative;z-index:1;font-family:var(--f-head);font-size:clamp(17px,4.2vw,23px);line-height:1.05;color:var(--ink)}
+.tile .tart{position:absolute;right:18px;top:50%;translate:0 -58%;width:min(46%,120px);rotate:0deg}
+.p0{--tb:var(--butter)}.p1{--tb:var(--peach)}.p2{--tb:var(--salmon)}.p3{--tb:var(--sand)}.p4{--tb:var(--olive)}.p5{--tb:var(--rose)}
+
+/* category pages */
+.pagehead{display:flex;align-items:center;gap:14px;margin:14px 0 6px}
+.pagehead .emb{width:76px;flex:none}
+.pagehead h2{font-family:var(--f-head);font-weight:400;font-size:clamp(28px,7vw,46px);line-height:1;color:var(--accent)}
+.pagehead .btn{margin-left:auto}
+@media (max-width:520px){.pagehead{flex-wrap:wrap}.pagehead .btn{margin-left:0}}
+.split{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+@media (min-width:820px){.split{grid-template-columns:1fr 1fr;gap:18px}}
+.col{min-width:0;border-radius:32px;padding:22px 20px 14px}
+.col.sweet,.col.day{background:var(--tint-a)}
+.col.salty{background:var(--tint-b)}
+.sect{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.sect span{font-family:var(--f-head);font-size:26px;line-height:1;color:var(--ink)}
+.sect i{flex:1;border-bottom:2px dotted var(--dot)}
+.group{margin-top:14px}
+.ghead{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:84px}
+.gpill{display:inline-block;font-family:'Caveat','Nunito',cursive;font-weight:700;font-size:23px;letter-spacing:.02em;line-height:1.2;padding:9px 22px;border-radius:999px;background:var(--gc);color:var(--ink)}
+.gart{width:92px;flex:none;rotate:5deg}
+.g0{--gc:var(--peach)}.g1{--gc:var(--salmon)}.g2{--gc:var(--butter)}.g3{--gc:var(--rose)}.g4{--gc:var(--olive)}
+.rows{display:block}
+.row{position:relative;border-top:0}
+.ritem{display:flex;align-items:baseline;gap:10px;width:100%;padding:11px 2px;border-radius:10px}
+.ritem .nm{font-weight:800;font-size:17px;line-height:1.3}
+.ritem .nm small{display:block;font-weight:600;font-size:13px;color:var(--muted)}
+.ritem .lead{flex:1;min-width:14px;border-bottom:2px dotted var(--dot);opacity:.75;translate:0 -4px}
+.ritem svg{flex:none;color:var(--accent);translate:0 4px}
+.ritem:hover .nm{color:var(--accent-d)}
+.row.open{z-index:40}
+.pair{position:relative;margin:-2px 0 8px 2px}
+.popbtn{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-ui);border:1.5px solid var(--accent);color:var(--accent-d);font-weight:600;font-size:10.5px;padding:6px 12px;border-radius:999px;background:var(--card)}
+.popbtn:hover{background:var(--accent);color:var(--on-accent)}
+.pop{position:absolute;left:0;top:calc(100% - 2px);z-index:20;width:min(300px,calc(100vw - 56px));background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:12px 16px 14px;box-shadow:0 16px 36px var(--shadow)}
+.pop::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px}
+.pop h4{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:6px}
+.pop li{padding:4px 0;font-weight:700;font-size:15px}
+.pop li::before{content:"· ";color:var(--accent);font-weight:800}
+.pop li button{text-decoration:underline;text-decoration-color:var(--line);text-decoration-thickness:2px;text-underline-offset:3px;text-align:left}
+.pop li button:hover{text-decoration-color:var(--accent)}
+.empty{background:var(--card);border-radius:22px;padding:22px;color:var(--muted);margin-top:14px}
+.results{background:var(--card);border-radius:28px;padding:10px 20px 14px;margin-top:8px}
+
+/* modal */
+.overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(59,36,24,.5);padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet{position:relative;width:min(560px,100%);max-height:100%;overflow-y:auto;overflow-x:hidden;overflow-wrap:anywhere;background:var(--card);border-radius:30px;padding:14px 24px 26px;box-shadow:0 24px 60px rgba(40,20,10,.4);outline:0}
+.sh-bar{display:flex;justify-content:space-between;align-items:center;min-height:40px;margin-bottom:6px}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--paper-2);color:var(--ink)}
+.top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.top-row .txt{min-width:0}
+.top-row .art{width:96px;flex:none;rotate:5deg;margin-top:-6px}
+.kicker{display:inline-block;background:var(--gc,var(--peach));color:var(--ink);font-weight:800;font-size:13px;padding:3px 12px;border-radius:999px}
+.sheet h2{font-family:var(--f-head);font-weight:400;font-size:clamp(24px,6vw,32px);line-height:1.1;color:var(--accent);margin:10px 0 14px;text-wrap:balance;outline:0}
+.sheet .cta{margin-bottom:6px}
+.lab{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:18px 0 4px}
+.ings li{display:flex;align-items:baseline;gap:10px;padding:8px 0}
+.ings li .n{font-weight:700}
+.ings li .l{flex:1;min-width:12px;border-bottom:2px dotted var(--dot);opacity:.7;translate:0 -4px}
+.ings li .a{font-weight:800;text-align:right;max-width:52%}
+.kcal{display:inline-flex;align-items:baseline;gap:8px;background:var(--butter);border-radius:999px;padding:9px 20px;margin-top:14px}
+.kcal b{font-family:var(--f-head);font-weight:400;font-size:24px;line-height:1}
+.kcal span{font-weight:800;font-size:14px}
+.addons{display:flex;flex-wrap:wrap;gap:8px}
+.addons li button,.addons li span{display:block;border:1.5px solid var(--line);padding:5px 13px;border-radius:999px;font-size:15px;font-weight:700}
+.addons li button:hover{border-color:var(--accent);background:var(--tint-a)}
+.steps{counter-reset:s;margin-bottom:12px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:12px;padding:11px 0;border-top:1.5px dotted var(--line)}
+.steps li:first-child{border-top:0}
+.steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-family:var(--f-ui);font-weight:700;font-size:12px}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:6px}
+.cats button{position:relative;overflow:hidden;min-height:92px;font-family:var(--f-head);font-size:16px;line-height:1.1;background:var(--tb);border-radius:22px;padding:14px;display:flex;align-items:flex-end}
+.cats button span.t{position:relative;z-index:1}
+.cats button .ca{position:absolute;right:-4px;top:-2px;width:64px;rotate:6deg}
+.cats button:hover{transform:translateY(-2px)}
+.res-art{width:140px;margin:6px auto 4px;rotate:-3deg}
+.stack{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.preview{color:var(--muted);margin-bottom:8px}
+@media (max-width:560px){
+  .overlay{align-items:flex-end;padding:env(safe-area-inset-top,0px) 0 0}
+  .sheet{width:100%;border-radius:30px 30px 0 0;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.tile:hover,.btn:hover,.cats button:hover{transform:none}}
+
+/* уют */
+:root{--cloth:linear-gradient(rgba(210,85,58,.032) 50%,transparent 50%),linear-gradient(90deg,rgba(210,85,58,.032) 50%,transparent 50%)}
+body,.navband{background-image:var(--cloth);background-size:44px 44px;background-attachment:fixed}
+.hero{padding-top:64px}
+.bunting{position:absolute;left:0;top:14px;width:100%;height:40px;pointer-events:none}
+.hero::after,.tile::after{content:"";position:absolute;inset:8px;border:2px dashed rgba(255,255,255,.75);border-radius:calc(34px - 8px);pointer-events:none}
+.tile::after{border-radius:20px;border-color:rgba(255,255,255,.6)}
+.bon{display:flex;align-items:center;justify-content:center;gap:8px;margin:34px 0 8px;font-family:var(--f-head);font-size:15px;color:var(--accent)}
+.bon svg{color:var(--accent)}
+
+.bon{font-family:'Caveat','Nunito',cursive;font-weight:600;font-size:30px;gap:10px;margin-top:30px}
+.ritem{margin:0 -8px;padding:11px 8px;width:calc(100% + 16px);transition:background .15s}
+.ritem:hover{background:rgba(210,85,58,.07)}
+.tile .tart{transition:rotate .25s,scale .25s}
+.tile:hover .tart{rotate:-5deg;scale:1.06}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#app>*{animation:up .4s ease both}
+#app>*:nth-child(2){animation-delay:.05s}#app>*:nth-child(3){animation-delay:.1s}#app>*:nth-child(4){animation-delay:.15s}
+@media (prefers-reduced-motion:reduce){#app>*{animation:none}}
+.tile .tart svg{overflow:visible}
+.sec-title h2::after,.pagehead h2::after{content:'';display:inline-block;width:38px;height:24px;margin-left:10px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2044%2028%22%3E%3Cpath%20d%3D%22M2%2020C14%2020%2026%2016%2040%206%22%20fill%3D%22none%22%20stroke%3D%22%23B98F70%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M12%2019c-2-7%202-11%207-11%201%206-2%2010-7%2011zM22%2015c0-7%205-10%2010-9-1%206-4%209-10%209zM26%2018c4%201%208%203%2010%208-6%200-10-3-10-8z%22%20fill%3D%22%23F2C9A0%22%20stroke%3D%22%23B98F70%22%20stroke-width%3D%221.6%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") center/contain no-repeat;vertical-align:-2px}
+.pagehead h2::after{width:44px;height:28px}
+
+.pairs{display:flex;flex-wrap:wrap;gap:0 8px}
+.kvw{display:block;margin-top:14px}
+.kvw .kcal{margin-top:0;align-items:center}
+.kvb{cursor:pointer;font:inherit;color:inherit;text-align:left}
+.kvb em{font-style:normal;font-family:var(--f-ui);font-size:10px;font-weight:600;border:1.5px solid var(--accent);color:var(--accent-d);border-radius:999px;padding:3px 9px;background:var(--card)}
+.kvpop{position:static;margin-top:10px;background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:12px 16px 14px;box-shadow:0 16px 36px var(--shadow)}
+.kvpop h4{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:6px}
+.kvpop li{display:flex;justify-content:space-between;gap:14px;padding:5px 0;font-weight:700;font-size:15px;border-top:1.5px dotted var(--line)}
+.kvpop li:first-of-type{border-top:0}
+.kvpop li b{white-space:nowrap;color:var(--accent-d)}
+.tips{display:grid;gap:8px}
+.tips li{background:var(--tint-a);border-radius:16px;padding:10px 14px;font-weight:700;font-size:15px}
+.ings li .a{white-space:normal;overflow-wrap:normal;word-break:normal;max-width:56%;flex:0 1 auto;text-align:right}
+.ings li .n{min-width:36%;overflow-wrap:normal;word-break:normal;flex:0 1 auto}
+.plqs{margin-top:12px}
+.plq{margin-top:8px}
+.plq summary{list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-family:var(--f-ui);border:1.5px solid var(--accent);color:var(--accent-d);font-weight:600;font-size:12px;padding:8px 15px;border-radius:999px;background:var(--card)}
+.plq summary::-webkit-details-marker{display:none}
+.plq summary:hover,.plq[open] summary{background:var(--accent);color:var(--on-accent)}
+.plq>ul{margin-top:10px}
+.plqrow{display:flex;flex-wrap:wrap;gap:8px}
+.plqb{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-ui);border:1.5px solid var(--accent);color:var(--accent-d);font-weight:600;font-size:12px;padding:8px 15px;border-radius:999px;background:var(--card)}
+.plqb:hover,.plqb[aria-expanded="true"]{background:var(--accent);color:var(--on-accent)}
+.plqp{margin-top:10px}
+.srvrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.srvrow .lab{margin:18px 0 4px}
+.srv{display:inline-flex;align-items:center;gap:8px;margin-top:12px;font-weight:800;font-size:14px}
+.srv button{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent-d);font-size:20px;line-height:1;display:grid;place-items:center;background:var(--card)}
+.srv button:hover{background:var(--accent);color:var(--on-accent)}
+.srv span{min-width:76px;text-align:center}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><filter id="wob" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.4"/></filter></defs></svg>
+<header>
+  <div class="wrap top-in">
+    <button class="brand" type="button" data-act="route" data-route="home">Домашнее меню</button>
+    <form class="search" role="search" id="sform" autocomplete="off">
+      <svg class="si" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Поиск" aria-label="Поиск по блюдам и ингредиентам" enterkeyhint="search">
+      <button class="clr" id="qclr" type="button" aria-label="Очистить поиск" hidden><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg></button>
+    </form>
+  </div>
+</header>
+<div class="navband"><div class="wrap"><nav class="tabs" id="tabs" aria-label="Разделы меню"></nav></div></div>
+<main class="wrap" id="app"></main>
+
+<div class="overlay" id="modal" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="mtitle" tabindex="-1"></div>
+</div>
+
+<script>
+/*DATA*/
+const D=(id,name,kcal,ing,steps,addons)=>({id,name,kcal,ing:ing.split('; '),steps:steps.split(' | '),addons:addons||null});
+const G=(title,dishes)=>({title,dishes});
+const CATS=[];
+CATS.push({id:'salty',tab:'Солёные завтраки',groups:[
+G('Яйца',[
+D('yaichnitsa','Яичница',230,'яйца; сосиски; сливочное или растительное масло; соль; перец','Разрежьте каждую сосиску вдоль на 4 части. | Разогрейте сковороду с маслом на среднем огне и обжарьте сосиски 2–3 минуты до румяных краёв, переложите на тарелку. | В той же сковороде аккуратно разбейте яйца. | Посолите и готовьте 3–4 минуты, пока белок не станет плотным. | Для глазуньи не переворачивайте. Если хотите плотный желток, переверните на 30 секунд. | Подавайте с жареными сосисками.'),
+D('yaytsa-varenye','Яйца варёные',155,'яйца; вода; соль','Выложите яйца в кастрюлю, залейте холодной водой, добавьте щепотку соли. | Доведите до кипения. | Варите 5–6 минут для яиц всмятку или 8–9 минут для яиц вкрутую. | Переложите в холодную воду на 2 минуты и очистите.'),
+D('omlet','Омлет с сосисками, грибами и луком',190,'яйца; молоко; сосиски; шампиньоны; лук; сливочное масло; соль','Нарежьте лук мелко, грибы пластинками, сосиски кружочками. | Обжарьте лук на масле 3 минуты, добавьте грибы и жарьте 7–8 минут, пока жидкость не выпарится. Добавьте сосиски и жарьте ещё 2–3 минуты. | Взбейте яйца с молоком и солью вилкой или венчиком. | Залейте начинку яичной смесью и накройте крышкой. | Готовьте на небольшом огне 5–7 минут, пока омлет не станет плотным и пышным.'),
+D('skrembl','Скрембл с сосисками, грибами и луком',200,'яйца; молоко или сливки; сосиски; шампиньоны; лук; сливочное масло; соль; перец','Нарежьте лук мелко, грибы пластинками, сосиски кружочками. | Обжарьте лук на масле 3 минуты, добавьте грибы и жарьте 7–8 минут. Добавьте сосиски и жарьте 2–3 минуты. Переложите в тарелку. | Слегка взбейте яйца с молоком, солью и перцем. | Влейте яйца на сковороду на слабом огне и мягко помешивайте лопаткой, собирая края к центру. | Верните начинку и снимите с огня, пока яйца ещё влажные: они дойдут от тепла сковороды.'),
+D('shakshuka','Шакшука',110,'яйца; помидоры; болгарский перец; лук; чеснок; паприка; растительное масло; соль; перец; зелёный лук','Обжарьте лук и перец на масле 5 минут. | Добавьте чеснок, нарезанные помидоры, паприку, соль и перец. | Тушите 10 минут, пока соус не загустеет. | Сделайте в соусе ямки и вбейте яйца. | Накройте крышкой и готовьте 5–7 минут. Посыпьте нарезанным зелёным луком.',['Свежая чиабатта'])
+]),
+G('Бутерброды и тосты',[
+D('buterbrody','Бутерброды с колбасой и сыром',290,'хлеб или батон; колбаса; сыр; сливочное масло (по желанию)','Нарежьте хлеб ломтиками. | При желании смажьте маслом. | Сверху выложите колбасу и сыр.'),
+D('goryachie-buterbrody','Горячие бутерброды с колбасой и сыром',290,'батон; колбаса; сыр; кетчуп или майонез (по желанию)','Нарежьте батон ломтиками и выложите на противень с пергаментом. | Сверху положите колбасу и натёртый сыр. | Запекайте при 180 °C 8–10 минут, пока сыр не расплавится. Можно разогреть в микроволновке 1–2 минуты.'),
+D('grenki','Гренки с яйцом',250,'хлеб или батон; яйца; молоко; соль; растительное масло','Взбейте яйца с молоком и солью. | Нарежьте хлеб ломтиками. | Обмакните каждый ломтик в яичную смесь с обеих сторон. | Обжарьте на разогретом масле по 2 минуты с каждой стороны до золотистой корочки. | Подавайте горячими, можно с сыром или чесноком.'),
+D('tost-avokado','Тосты с авокадо',240,'хлеб для тостов; авокадо; лимонный сок; соль; перец; яйцо (по желанию)','Подсушите хлеб в тостере или на сухой сковороде. | Разомните авокадо вилкой с лимонным соком, солью и перцем. | Намажьте пасту на тосты. | При желании сверху добавьте яйцо.'),
+D('tost-ryba','Тосты с красной рыбой',260,'хлеб для тостов; слабосолёная красная рыба; сливочный сыр; зелень; лимон','Подсушите хлеб в тостере. | Намажьте сливочным сыром. | Выложите ломтики рыбы. | Добавьте зелень и капельку лимонного сока.'),
+D('brusketta-tunets','Брускетта с тунцом',230,'чиабатта; творожный сыр; консервированный тунец; помидоры; салатные листья; яйца; уксус; соль; растительное масло','Нарежьте чиабатту ломтиками и обжарьте с двух сторон на сковороде с каплей масла до румяного цвета. | Намажьте ещё тёплый хлеб творожным сыром. | Разомните тунец вилкой и выложите на сыр. | Нарежьте помидоры мелкими кубиками (тартар), слегка посолите, добавьте щепотку сахара и выложите поверх тунца. | Сверху положите лист салата. | Налейте в неглубокую кастрюлю воду, доведите до слабого кипения, посолите и добавьте ложку уксуса. Размешайте воду ложкой, чтобы получилась воронка. | Аккуратно вылейте яйцо в центр воронки и варите 3 минуты. Достаньте шумовкой и положите на салфетку. | Положите яйцо пашот на салат и подавайте сразу.'),
+D('pita-tunets','Пита с тунцом',250,'пита; яйца; творожный сыр; консервированный тунец; помидоры; растительное масло; соль','Взбейте яйца с щепоткой соли в широкой тарелке. | Обмакните питу в яйцо только одной стороной, чтобы яйцо схватилось на ней. | Обжарьте питу на сковороде с каплей масла только со стороны яйца 1–2 минуты до золотистой корочки. | Выложите питу жареной стороной вверх и сразу намажьте на неё творожный сыр. | Нарежьте помидоры мелкими кубиками (тартар), слегка посолите и добавьте щепотку сахара. Разомните тунец вилкой. | Выложите на сыр помидоры и тунец. | Сложите питу пополам и подавайте сразу.'),
+D('brusketta-griby','Брускетта с грибами и луком',220,'чиабатта; творожный сыр; шампиньоны; репчатый лук; чеснок; помидоры; салатные листья; яйца; уксус; растительное масло; соль; перец','Мелко нарежьте лук и грибы. Обжарьте лук 3 минуты, добавьте грибы и жарьте 8–10 минут, пока жидкость не выпарится. Посолите, поперчите, добавьте чеснок на минуту. | Нарежьте чиабатту ломтиками и обжарьте с двух сторон на сковороде с каплей масла до румяного цвета. | Намажьте ещё тёплый хлеб творожным сыром и выложите грибы с луком. | Нарежьте помидоры мелкими кубиками (тартар), слегка посолите, добавьте щепотку сахара и выложите сверху. | Сверху положите лист салата. | Налейте в неглубокую кастрюлю воду, доведите до слабого кипения, посолите и добавьте ложку уксуса. Размешайте воду ложкой, чтобы получилась воронка. | Аккуратно вылейте яйцо в центр воронки и варите 3 минуты. Достаньте шумовкой и положите на салфетку. | Положите яйцо пашот на салат и подавайте сразу.'),
+D('pita-griby','Пита с грибами и луком',230,'пита; яйца; творожный сыр; шампиньоны; репчатый лук; помидоры; растительное масло; соль; перец','Мелко нарежьте лук и грибы. Обжарьте лук 3 минуты, добавьте грибы и жарьте 8–10 минут, посолите и поперчите. Переложите в тарелку. | Взбейте яйца с щепоткой соли в широкой тарелке. | Обмакните питу в яйцо только одной стороной, чтобы яйцо схватилось на ней. | Обжарьте питу на сковороде с каплей масла только со стороны яйца 1–2 минуты до золотистой корочки. | Выложите питу жареной стороной вверх и сразу намажьте на неё творожный сыр. | Нарежьте помидоры мелкими кубиками (тартар), слегка посолите. | Выложите на сыр помидоры и грибы с луком. | Сложите питу пополам и подавайте сразу.')
+]),
+G('Овощные блюда',[
+D('kabachkovye-oladi','Кабачковые оладьи',150,'кабачки; яйца; мука; соль; перец; чеснок; растительное масло для жарки','Натрите кабачки на тёрке и отожмите сок. | Добавьте яйца, соль, перец, немного чеснока для чесночной нотки и муку по ощущению, чтобы получилось густое тесто. | Перемешайте и жарьте ложками на масле с двух сторон до румяной корочки.'),
+D('draniki','Драники',190,'картофель; лук; яйцо; мука; соль; перец; растительное масло; сметана для подачи','Натрите картофель и лук, слегка отожмите сок. | Добавьте яйцо, муку, соль и перец. | Выкладывайте ложкой на горячую сковороду с маслом. | Жарьте по 3–4 минуты с каждой стороны до золотистой корочки. | Подавайте со сметаной.')
+])
+]});
+CATS[0].groups.forEach(g=>g.section='Солёные');
+CATS.push({id:'sweet',tab:'Сладкие завтраки',groups:[
+G('Каши и хлопья',[
+D('manka','Манная каша на молоке',98,'молоко; манная крупа; сахар; сливочное масло; соль','Доведите молоко до кипения с сахаром и щепоткой соли. | Тонкой струйкой всыпьте манку и постоянно помешивайте. | Варите на слабом огне 3–5 минут. | Снимите с огня и добавьте масло.'),
+D('ovsyanka','Овсяная каша на молоке',130,'овсяные хлопья; молоко; изюм; банан; сахар или мёд; соль; сливочное масло','Залейте изюм кипятком на 10 минут, затем слейте воду. | Доведите молоко до кипения. | Всыпьте хлопья, соль и сахар. | Варите 5–7 минут на слабом огне, помешивая. | Накройте крышкой на 3 минуты и добавьте масло. | Разложите кашу по тарелкам, добавьте изюм и половинку банана, нарезанную кружочками.'),
+D('khlopya','Хлопья с молоком',110,'сухие хлопья; молоко','Насыпьте хлопья в миску. | Залейте холодным или тёплым молоком. | Подавайте сразу, пока хлопья хрустят.'),
+D('myusli','Мюсли',150,'мюсли; молоко или йогурт; фрукты или ягоды (по желанию)','Насыпьте мюсли в миску. | Залейте молоком или йогуртом. | Добавьте нарезанные фрукты или ягоды.')
+]),
+G('Творожные блюда',[
+D('zapekanka','Творожная запеканка с вишней',170,'творог; яйца; сахар; манка; сметана; соль; молоко; замороженная вишня; сливочное масло для формы','Смешайте творог, яйца, сахар, манку, сметану, соль и молоко. | Смажьте форму сливочным маслом и посыпьте манкой. | Выложите творожную массу в форму и вдавите в неё вишню. | Выпекайте при 180 °C минимум 60 минут, при необходимости чуть дольше.'),
+D('lenivye-vareniki','Ленивые вареники',190,'творог; яйцо; мука; сахар; соль; сливочное масло; сметана для подачи','Смешайте творог, яйцо, сахар и соль. | Добавьте муку и замесите мягкое тесто. | Раскатайте жгуты и нарежьте кусочками. | Варите в подсоленной воде, пока не всплывут, и ещё 2 минуты. | Подавайте с маслом и сметаной.'),
+D('syrniki','Творожные сырники',220,'мягкий творог; желток; сахар; манка; растительное масло для жарки','Смешайте творог с желтком и сахаром. | Сформируйте сырники, обваливая каждый в манке. | Обжарьте на масле до золотистой корочки с двух сторон.')
+]),
+G('Блины и оладьи',[
+D('bliny','Блины',190,'молоко; яйца; соль; сахар; ванильный сахар; мука; растительное масло','Взбейте яйца с солью, сахаром и ванильным сахаром. | Влейте молоко, всыпьте муку и перемешайте до гладкости. | Добавьте растительное масло и перемешайте. | Жарьте на горячей смазанной сковороде примерно по минуте с каждой стороны.'),
+D('pankeiki','Панкейки',230,'молоко; яйцо; мука; сахар; разрыхлитель; сливочное масло; соль; растительное масло для сковороды; мёд или сироп для подачи','Смешайте муку, сахар, разрыхлитель и щепотку соли. | Отдельно взбейте яйцо с молоком и растопленным маслом. | Влейте жидкую смесь в сухую и быстро перемешайте до густого теста, комочки можно оставить. | Дайте тесту постоять 5 минут. | Жарьте на слегка смазанной сковороде на среднем огне по 2 минуты с каждой стороны, пока не появятся пузырьки и румяный цвет. | Подавайте стопкой с мёдом или сиропом.'),
+D('bananovye-oladi','Банановые оладьи',200,'бананы; яйцо; мука; разрыхлитель; молоко или кефир; сахар (по желанию); растительное масло','Разомните бананы вилкой. | Добавьте яйцо и молоко, перемешайте. | Всыпьте муку с разрыхлителем и замесите густое тесто. | Выкладывайте ложкой на сковороду с маслом. | Жарьте по 2–3 минуты с каждой стороны на среднем огне.')
+])
+]});
+CATS[1].groups.forEach(g=>g.section='Сладкие');
+CATS[0].groups=CATS[0].groups.concat(CATS[1].groups);CATS[0].id='breakfast';CATS[0].tab='Завтраки';CATS.splice(1,1);
+CATS.push({id:'lunch',tab:'Обеды',groups:[
+G('Куриные супы',[
+D('sup-kurinyi','Куриный суп',45,'куриные бёдра или голени на кости; вода; лук; морковь; чеснок; картофель; соль; лавровый лист; укроп; растительное масло','Залейте куриные бёдра или голени на кости холодной водой, доведите до кипения и кипятите 5 минут. Слейте всю воду, вымойте кастрюлю и мясо. | Обжарьте на масле лук, морковь и чеснок до тёмного, почти чёрного цвета. | Сложите в чистую кастрюлю мясо и обжаренные овощи, добавьте лавровый лист и перец горошком. Залейте холодной водой и только потом поставьте на плиту. | Варите бульон долго, на слабом огне 1–1,5 часа, затем процедите через марлю, чтобы он стал прозрачным. Мясо снимите с кости. | Верните процеженный бульон в кастрюлю, добавьте нарезанный кубиками картофель и немного свежей моркови, варите 15 минут. | Посолите, верните мясо в суп и добавьте рубленый укроп.'),
+D('sup-lapsha','Куриный суп с лапшой',50,'куриные бёдра или голени на кости; вода; вермишель или лапша; лук; морковь; чеснок; картофель; яйца; соль; лавровый лист; укроп; растительное масло','Залейте куриные бёдра или голени на кости холодной водой, доведите до кипения и кипятите 5 минут. Слейте всю воду, вымойте кастрюлю и мясо. | Обжарьте на масле лук, морковь и чеснок до тёмного, почти чёрного цвета. | Сложите в чистую кастрюлю мясо и обжаренные овощи, добавьте лавровый лист и перец горошком. Залейте холодной водой и только потом поставьте на плиту. | Варите бульон долго, на слабом огне 1–1,5 часа, затем процедите через марлю, чтобы он стал прозрачным. Мясо снимите с кости. | Верните процеженный бульон в кастрюлю, добавьте картофель и свежую морковь, варите 10–12 минут. Верните мясо в суп. | Отдельно сварите яйца шестиминутки: опустите в кипящую воду на 6 минут, переложите в холодную воду и очистите. | Лапшу кладите в самый последний момент: всыпьте, сразу размешайте ложкой и выключите огонь. Она дойдёт до готовности от внутренней температуры супа. | Подавайте суп с рубленым укропом и половинками яйца: желток должен остаться немного жидким.'),
+D('sup-frikadelki','Куриный суп с фрикадельками',55,'куриные бёдра или голени на кости; куриный фарш; вода; лук; морковь; чеснок; картофель; соль; перец; лавровый лист; зелень; растительное масло','Залейте куриные бёдра или голени на кости холодной водой, доведите до кипения и кипятите 5 минут. Слейте всю воду, вымойте кастрюлю и мясо. | Обжарьте на масле лук, морковь и чеснок до тёмного, почти чёрного цвета. | Сложите в чистую кастрюлю мясо и обжаренные овощи, добавьте лавровый лист и перец горошком. Залейте холодной водой и только потом поставьте на плиту. | Варите бульон долго, на слабом огне 1–1,5 часа, затем процедите через марлю, чтобы он стал прозрачным. Мясо снимите с кости. | Смешайте куриный фарш с мелко нарезанным луком, солью и перцем, слепите маленькие шарики. | Верните процеженный бульон в кастрюлю, добавьте нарезанный картофель и варите 10 минут. | Опустите фрикадельки и варите ещё 10–12 минут. Добавьте свежую морковь, посолите. | Подавайте с рубленой зеленью. Рис и вермишель в этот суп не добавляются.')
+]),
+G('Супы',[
+D('sup-syrnyi','Сырный суп',75,'плавленый сыр; куриные бёдра или голени на кости; копчёная грудинка; вода; картофель; морковь; лук; чеснок; соль; зелень; сухарики; растительное масло','Залейте куриные бёдра или голени на кости холодной водой, доведите до кипения и кипятите 5 минут. Слейте всю воду, вымойте кастрюлю и мясо. | Обжарьте на масле лук, морковь и чеснок до тёмного, почти чёрного цвета. | Сложите в чистую кастрюлю мясо и обжаренные овощи, добавьте лавровый лист и перец горошком. Залейте холодной водой и только потом поставьте на плиту. | Варите бульон долго, на слабом огне 1–1,5 часа, затем процедите через марлю, чтобы он стал прозрачным. Мясо снимите с кости. | Нарежьте копчёную грудинку кубиком и обжарьте вместе с овощами (луком и морковью). | Верните процеженный бульон в кастрюлю, добавьте нарезанный картофель и варите 15 минут. | Добавьте грудинку с овощами. Положите плавленый сыр и помешивайте, пока он не растворится. | Верните мясо, посолите, добавьте зелень и подавайте с сухариками.'),
+D('sup-gribnoi','Грибной суп-пюре',70,'шампиньоны; куриные бёдра или голени на кости; вода; картофель; лук; морковь; чеснок; сливки; сливочное масло; соль; перец; лавровый лист','Залейте куриные бёдра или голени на кости холодной водой, доведите до кипения и кипятите 5 минут. Слейте всю воду, вымойте кастрюлю и мясо. | Обжарьте на масле лук, морковь и чеснок до тёмного, почти чёрного цвета. | Сложите в чистую кастрюлю мясо и обжаренные овощи, добавьте лавровый лист и перец горошком. Залейте холодной водой и только потом поставьте на плиту. | Варите бульон долго, на слабом огне 1–1,5 часа, затем процедите через марлю, чтобы он стал прозрачным. Мясо снимите с кости. | Обжарьте на масле нарезанный лук и грибы 10 минут. | Верните процеженный бульон в кастрюлю, добавьте картофель и варите до мягкости, около 15 минут. | Добавьте грибы с луком, влейте сливки, посолите и поперчите. | Измельчите блендером до однородного пюре, прогрейте минуту. Подавайте с сухариками, если хотите.'),
+D('borsch','Борщ',55,'говяжья грудинка или рёбра на кости (либо свиные рёбрышки, либо куриные бёдра); свёкла; капуста; картофель; морковь; лук; томатная паста; чеснок; соль; лавровый лист; перец горошком; сметана; зелень','Залейте мясо холодной водой, доведите до кипения и кипятите 5 минут. Слейте всю воду, вымойте кастрюлю и мясо. | Обжарьте на масле лук, часть моркови и чеснок до тёмного, почти чёрного цвета. | Сложите в чистую кастрюлю мясо и обжаренные овощи, добавьте лавровый лист и перец горошком. Залейте холодной водой и только потом поставьте на плиту. Варите на слабом огне: говядину на рёбрах около 2 часов, свиные рёбрышки около 1,5 часа, курицу около часа. | Процедите бульон через марлю, мясо снимите с кости и нарежьте. | Отдельно обжарьте свёклу с томатной пастой и оставшейся морковью, добавьте немного бульона и тушите 10 минут. | В процеженный бульон положите картофель, через 10 минут капусту. | Добавьте зажарку и мясо, посолите, варите ещё 10 минут. | Добавьте чеснок и зелень. Подавайте со сметаной.'),
+D('solyanka','Солянка',90,'говяжья голяшка или рёбра на кости (либо куриные бёдра); копчёные колбаски и ветчина; солёные огурцы; лук; морковь; чеснок; томатная паста; маслины; лимон; сметана; соль; лавровый лист; перец горошком; растительное масло','Залейте мясо холодной водой, доведите до кипения и кипятите 5 минут. Слейте всю воду, вымойте кастрюлю и мясо. | Обжарьте на масле лук, морковь и чеснок до тёмного, почти чёрного цвета. | Сложите в чистую кастрюлю мясо и обжаренные овощи, добавьте лавровый лист и перец горошком. Залейте холодной водой и только потом поставьте на плиту. Варите на слабом огне: говядину около 2 часов, курицу около часа. Процедите через марлю, мясо нарежьте. | Обжарьте лук с томатной пастой и нарезанными огурцами 5–7 минут. | В процеженный бульон добавьте зажарку, нарезанные копчёные колбаски и ветчину, мясо и маслины. | Варите 10–15 минут, посолите по вкусу. | Подавайте с лимоном и сметаной.'),
+D('sup-goroshek','Гороховый суп',70,'горох; копчёные свиные рёбрышки; картофель; морковь; лук; соль; лавровый лист; сухарики','Заранее, минимум за 1–2 часа, залейте горох кипятком и оставьте набухать. | Залейте замоченный горох и копчёные свиные рёбрышки водой и варите 40 минут. | Добавьте картофель, через 10 минут добавьте обжаренные лук и морковь. | Посолите и варите, пока горох не разварится до состояния пюре. | Достаньте рёбрышки, снимите мясо с кости и верните в суп. Подавайте с сухариками.'),
+D('ukha','Уха',40,'красная рыба (форель или сёмга) или белая (судак, окунь); картофель; морковь; лук; лавровый лист; перец горошком; соль; зелень; лимон','Из головы, хвоста и плавников форели или сёмги (либо из судака или окуня) сварите бульон: залейте холодной водой, доведите до кипения, снимите пену и варите 20 минут. Процедите. | Добавьте в бульон нарезанные картофель, морковь и лук, варите 10 минут. | Добавьте лавровый лист и перец горошком. Положите кусочки филе и варите 7–10 минут. | Посолите, добавьте зелень и подавайте с лимоном.')
+]),
+G('Холодные супы',[
+D('okroshka','Окрошка',55,'кефир или айран; картофель; яйца; огурцы; редис; варёная колбаса докторская; зелёный лук; укроп; соль; сметана','Сварите картофель и яйца, остудите. | Нарежьте кубиками картофель, яйца, огурцы, редис и докторскую колбасу. | Добавьте измельчённую зелень и посолите. | Залейте холодным кефиром или айраном. | Подавайте с ложкой сметаны.')
+])
+]});
+CATS.push({id:'dinner',tab:'Ужины',groups:[
+G('Курица',[
+D('kuritsa-kislo-sladkaya','Курица в кисло-сладком соусе',140,'филе куриного бедра; болгарский перец; морковь; лук; соевый соус; кетчуп; мёд; уксус; крахмал; растительное масло','Нарежьте филе бедра кубиками, обваляйте в крахмале и обжарьте до золотистого цвета. | Отдельно обжарьте лук, перец и морковь 5 минут. | Смешайте соевый соус, кетчуп, мёд, уксус и немного воды. | Влейте соус к овощам и доведите до кипения. | Добавьте курицу и прогрейте 3–5 минут, пока соус не загустеет.'),
+D('kuritsa-duhovka','Курица с картошкой в духовке',130,'куриные бёдра или голени; картофель; лук; чеснок; растительное масло; паприка; соль; перец','Нарежьте картофель крупными дольками, лук полукольцами. | Смешайте курицу и картофель с маслом, солью, перцем, паприкой и чесноком. | Выложите на противень или в форму. | Запекайте при 190 °C 50–60 минут. | Через 30 минут перемешайте, чтобы всё зарумянилось.'),
+D('kuritsa-slivki','Курица в сливках с грибами',140,'филе куриного бедра; шампиньоны; лук; сливки; чеснок; сливочное масло; соль; перец; зелень','Нарежьте филе бедра кусочками и обжарьте до золотистой корочки. | Добавьте лук и грибы и жарьте 8–10 минут. | Влейте сливки, добавьте чеснок, соль и перец. | Тушите на слабом огне 10–12 минут. | Посыпьте зеленью.'),
+D('kuritsa-maggi','Курица в листах Maggi',150,'куриное филе; смесь Maggi в листах; растительное масло (по инструкции на упаковке)','Разрежьте куриное филе на пласты и отбейте их через плёнку. | Подготовьте смесь по инструкции на упаковке Maggi и положите в листы отбитую курицу. | Обжарьте на сковороде или запеките в духовке так, как указано на упаковке. | Курица готова, когда сок прозрачный, а мясо белое внутри.'),
+D('krylya','Крылья KFC',250,'куриные крылья; мука; паприка; чёрный перец; сухой чеснок; соль; вода; растительное масло','Разрежьте каждое крыло по суставу на 2 части. | Смешайте муку с солью, паприкой, чёрным перцем и сухим чесноком. | Обваляйте куски в этой муке, на секунду окуните в воду, затем снова обваляйте в той же панировке. | Опустите в раскалённое масло и жарьте 10–12 минут, пока корочка не станет золотистой, а мясо не будет готово внутри. | Выложите на бумажное полотенце.'),
+D('kur-otbivnye','Куриные отбивные в соевом соусе',190,'куриная грудка; яйца; соевый соус; чеснок; чёрный перец; приправа для курицы; соль; растительное масло для жарки','Нарежьте куриную грудку пластами и отбейте. | В миске смешайте яйца с солью, чесноком, чёрным перцем, приправой для курицы и соевым соусом. | Положите филе в эту смесь и оставьте мариноваться на 30 минут. | Обжарьте на масле до готовности с двух сторон.'),
+D('kur-kotlety','Куриные котлеты',190,'куриный фарш из бедренного филе; лук; яйцо; хлеб, размоченный в молоке; панировочные сухари; соль; перец; растительное масло','Смешайте фарш из бедренного филе (грудка получится суховатой) с натёртым луком, яйцом, размоченным хлебом, солью и перцем. | Вымесите фарш и слегка отбейте его о миску. | Сформируйте котлеты и обваляйте в сухарях. | Жарьте на среднем огне по 4–5 минут с каждой стороны. | Накройте крышкой и доведите на слабом огне 5 минут.')
+]),
+G('Свинина и мясные блюда',[
+D('svin-otbivnye','Свиные отбивные',260,'свиная шея или корейка; яйцо; мука; соль; перец; растительное масло','Нарежьте свиную шею или корейку ломтями поперёк волокон и отбейте. | Посолите и поперчите. | Обмакните в яйцо, затем в муку. | Обжарьте на разогретом масле по 3–4 минуты с каждой стороны. | Накройте крышкой и дайте постоять 5 минут.'),
+D('myaso-gorshochki','Мясо в горшочках',150,'свиная шея, говяжья лопатка, куриные бёдра или бедро индейки; картофель; морковь; лук; чеснок; лавровый лист; соль; перец; растительное масло; бульон или вода; сметана (по желанию)','Нарежьте мясо кубиками (свиную шею, говяжью лопатку, куриные бёдра или бедро индейки) и обжарьте на масле 5–7 минут до корочки. | Картофель и морковь нарежьте кубиками, лук полукольцами, чеснок разрежьте. | Выложите в горшочки слоями: мясо, лук, морковь, картофель. Добавьте соль, перец, чеснок и лавровый лист. | Залейте бульоном или водой на две трети высоты. | Накройте крышками и поставьте в холодную духовку. Готовьте при 180 °C: свинину и говядину 1–1,5 часа, курицу и индейку около 1 часа, до мягкости мяса. | По желанию добавьте ложку сметаны и подавайте в горшочках.'),
+D('svin-kotlety','Свино-говяжьи котлеты',240,'фарш из свиной шеи и говяжьей лопатки; лук; яйцо; хлеб, размоченный в молоке; чеснок; панировочные сухари; соль; перец; растительное масло','Смешайте фарш из свиной шеи и говяжьей лопатки с натёртым луком, яйцом, размоченным хлебом, чесноком, солью и перцем. | Вымесите фарш и слегка отбейте его о миску. | Сформируйте котлеты и обваляйте в сухарях. | Обжарьте с двух сторон по 4–5 минут до корочки. | Накройте крышкой и тушите на слабом огне 10 минут.'),
+D('gulyash','Гуляш',140,'говяжья лопатка или шея (либо свиная шея); лук; морковь; томатная паста; мука; соль; перец; лавровый лист; растительное масло','Нарежьте говяжью лопатку или шею (либо свиную шею) кубиками и обжарьте до корочки. | Добавьте лук и морковь и жарьте 5 минут. | Добавьте томатную пасту и муку, перемешайте. | Влейте горячую воду, чтобы закрыть мясо, добавьте соль, перец и лавровый лист. | Тушите под крышкой на слабом огне: говядину 1,5–2 часа, свинину около 1 часа, пока мясо не станет мягким.'),
+D('bef','Бефстроганов',170,'говяжья вырезка или тонкий край; лук; шампиньоны; сметана; горчица; соль; перец; растительное масло','Нарежьте говяжью вырезку или тонкий край тонкими брусочками поперёк волокон. | Быстро обжарьте мясо на сильном огне и переложите в тарелку. | Обжарьте лук и грибы до мягкости. | Верните мясо, добавьте сметану, горчицу, соль и перец. | Тушите 10–15 минут на слабом огне.'),
+D('tefteli','Тефтели в томатном соусе',140,'фарш; рис; лук; яйцо; морковь; томатная паста; сметана; мука; соль; перец; лавровый лист','Смешайте фарш с полуготовым рисом, луком, яйцом, солью и перцем. | Слепите шарики и обваляйте в муке. | Слегка обжарьте. | Приготовьте соус: обжарьте лук с морковью, добавьте томатную пасту, сметану и воду. | Залейте тефтели соусом и тушите 25–30 минут.'),
+D('tushenaya-kartoshka','Тушёная картошка с мясом в томатном соусе',130,'свиная шея, говяжья лопатка, бедро индейки или куриные бёдра; картофель; лук; морковь; томатная паста; свежие помидоры; соль; перец; лавровый лист; растительное масло','Нарежьте мясо кусочками (свиную шею, говяжью лопатку, бедро индейки или куриные бёдра) и обжарьте до корочки. | Добавьте лук и морковь и жарьте 5 минут. | Добавьте томатную пасту и свежие помидоры, нарезанные мелкими кубиками (тартар) с щепоткой сахара, влейте воды на треть высоты. Свинину и говядину тушите 30 минут, индейку и курицу 15–20 минут. | Добавьте нарезанный картофель, соль, перец и лавровый лист. | Тушите под крышкой 25–30 минут, пока картофель не станет мягким.'),
+D('kapusta-serdechki','Тушёная капуста с куриными сердечками',110,'белокочанная капуста; куриные сердечки; лук; морковь; томатная паста; соль; перец; лавровый лист; растительное масло','Промойте сердечки, обрежьте жир и сосуды, разрежьте пополам. | Обжарьте сердечки с луком и морковью 10 минут. | Добавьте томатную пасту и немного воды, тушите 15–20 минут. | Добавьте нашинкованную капусту, соль, перец и лавровый лист. | Тушите под крышкой 25–30 минут, периодически помешивая.'),
+D('plov','Плов',190,'рис; свиная шея, говяжья грудинка или куриные бёдра; морковь; лук; чеснок; зира; барбарис; соль; растительное масло','Обжарьте мясо (свиную шею, говяжью грудинку или куриные бёдра) в раскалённом масле до корочки. | Добавьте лук, затем морковь соломкой и жарьте 7–10 минут. | Залейте горячей водой на 1–2 см выше мяса, добавьте зиру, соль и барбарис, варите на слабом огне: свинину 30–40 минут, говядину 1–1,5 часа, курицу 20–25 минут. | Промытый рис выложите ровным слоем и залейте кипятком на 1 см выше риса. | Когда вода выкипит, воткните в рис головку чеснока, накройте крышкой и томите 20 минут на слабом огне. | Перед подачей аккуратно перемешайте.'),
+D('grechka-kupecheski','Гречка по-купечески',150,'гречка; мясо (свиная шея или говяжья лопатка); лук; морковь; чеснок; соль; перец; растительное масло','Нарежьте мясо (свиную шею или говяжью лопатку) небольшими кубиками и обжарьте до румяности. | Добавьте лук и морковь и жарьте 5–7 минут. | Всыпьте промытую гречку, посолите и поперчите. | Залейте горячей водой на 1,5 см выше крупы. | Накройте крышкой и варите 15–20 минут на слабом огне до готовности.'),
+D('makarony-flotski','Макароны по-флотски',180,'макароны; фарш (свино-говяжий, свиной или куриный); лук; соль; перец; растительное масло; сыр (по желанию)','Сварите макароны в подсоленной воде до готовности. | Обжарьте лук, добавьте фарш (свино-говяжий, свиной или куриный) и жарьте до готовности 10–12 минут. | Посолите и поперчите. | Смешайте макароны с фаршем и прогрейте минуту.')
+]),
+G('Рыба',[
+D('skumbriya','Жареная картошка со скумбрией',210,'картофель; скумбрия атлантическая; сливочное масло; растительное масло; соль; перец; зелень','Очистите картофель и нарежьте мелкими кубиками. Опустите в кипящую воду на 10 минут, затем достаньте шумовкой. | Выложите картофель на раскалённую сковороду, на которой только сливочное масло. Раз в 5 минут перемешивайте, лучше подбрасывая сковороду, а не лопаткой. | Через 15 минут посолите с одной стороны, перемешайте и посолите с другой. | Скумбрию нарежьте стейками, посолите и поперчите. Обжарьте на другой сковороде на растительном масле по 4–5 минут с каждой стороны. | Подавайте вместе, посыпав зеленью.'),
+D('tunets-steyk','Стейк тунца в кунжуте',190,'стейк жёлтопёрого тунца; кунжут; соевый соус; растительное масло; соль; перец','Промокните стейки жёлтопёрого тунца салфеткой, посолите и поперчите. | Смажьте соевым соусом и обваляйте в кунжуте. | Разогрейте сковороду с маслом. | Обжарьте по 2–3 минуты с каждой стороны. Середина может остаться розовой, для плотной прожарки готовьте дольше. | Нарежьте поперёк волокон.'),
+D('tilapiya','Тилапия в панировке',190,'филе тилапии; панировочные сухари; лимон; соль; перец; растительное масло','Нарежьте филе тилапии порциями, посолите, поперчите и сбрызните лимоном. Полностью не обсушивайте: на влажной рыбе панировка держится лучше. | Обваляйте каждый кусок в панировочных сухарях, прижимая их к рыбе. | Обжарьте в горячем масле по 3–4 минуты с каждой стороны до золотистой корочки. | Выложите на бумажное полотенце.')
+]),
+G('Паста и азиатские блюда',[
+D('karbonara','Паста карбонара',190,'спагетти; гуанчале или грудинка (бекон); яйцо и желтки; пармезан или твёрдый сыр; чёрный перец; соль','Сварите спагетти в подсоленной воде и оставьте стакан отвара. | Нарежьте гуанчале или грудинку брусочками и обжарьте до румяности. | Смешайте желтки, яйцо и тёртый сыр, добавьте много чёрного перца. | Снимите сковороду с огня и добавьте спагетти к мясу. | Влейте яичную смесь и быстро перемешайте, добавляя отвар, пока соус не станет кремовым.'),
+D('bolonez','Паста болоньезе',150,'спагетти; говяжий фарш из лопатки (или свино-говяжий); лук; морковь; чеснок; томатная паста; итальянские травы; соль; перец; сыр','Обжарьте лук и морковь 5 минут. | Добавьте говяжий фарш из лопатки (или свино-говяжий) и жарьте 10 минут, разбивая комочки. | Добавьте чеснок, томатную пасту, травы, соль и перец. | Тушите на слабом огне 20–30 минут. | Сварите спагетти, смешайте с соусом и посыпьте сыром.'),
+D('nyoki','Ньоки в сливочном соусе',170,'картофель; мука; яйцо; соль; сливки; пармезан или другой твёрдый сыр; сливочное масло; чеснок','Отварите картофель в мундире, очистите и разомните в пюре, остудите. | Добавьте яйцо, соль и муку, замесите мягкое тесто (муки добавляйте по чуть-чуть, чтобы не было жёстким). | Раскатайте жгуты, нарежьте кусочками по 2 см. Для рифлёности прокатите каждый по вилке. | Варите в подсоленной кипящей воде, пока не всплывут, и ещё 1 минуту. | Обжарьте чеснок на масле, влейте сливки и прогрейте 3 минуты, добавьте тёртый сыр. | Выложите ньоки в соус и перемешайте.'),
+D('udon','Удон',130,'лапша удон; куриное филе бедра, бедро индейки или свиная шея; болгарский перец; морковь; капуста; лук; чеснок; соевый соус; растительное масло; кунжут; зелёный лук','Сварите удон по инструкции на упаковке и откиньте на дуршлаг. | Нарежьте мясо (куриное филе бедра, бедро индейки или свиную шею) и овощи соломкой. | Обжарьте мясо на сильном огне 5 минут, добавьте овощи и жарьте ещё 5 минут. | Добавьте чеснок, лапшу и соевый соус. | Перемешайте и прогрейте 2–3 минуты. | При подаче украсьте кунжутом и нарезанным зелёным луком.'),
+D('onigiri','Онигири',170,'рис для суши; нори; консервированный тунец; майонез; соль; вода','Сварите рис для суши и немного остудите. | Смешайте тунец с каплей майонеза для начинки. | Смочите руки водой и посолите ладони. | Возьмите порцию риса, сделайте углубление, положите начинку и закройте рисом. | Сформируйте треугольник и оберните полоской нори.')
+]),
+G('Остальные блюда',[
+D('kabachkovye-kotlety','Кабачковые котлеты',130,'куриный фарш; отжатые кабачки; лук; чеснок; панировочные сухари; яйцо; соль; смесь перцев; тимьян; сливочное масло; растительное масло для обжарки','Смешайте фарш, отжатые кабачки, нарезанный или натёртый лук, чеснок, сухари, яйцо, соль, смесь перцев и тимьян. | Сформируйте котлеты и слегка обжарьте на масле, чтобы схватилась корочка. | Переложите котлеты на противень и положите сверху по кусочку сливочного масла. | Накройте фольгой и запекайте при 200 °C 25 минут.'),
+D('pelmeni','Пельмени',230,'пельмени; вода; соль; лавровый лист; сметана или сливочное масло; перец','Вскипятите воду, добавьте соль и лавровый лист. | Опустите пельмени и перемешайте. | Когда всплывут, варите ещё 5–7 минут. | Подавайте со сметаной или маслом.'),
+D('vareniki','Вареники',170,'вареники (с картофелем или другой начинкой); вода; соль; сметана; жареный лук','Вскипятите подсоленную воду. | Опустите вареники и аккуратно перемешайте. | Когда всплывут, варите 3–5 минут. | Подавайте со сметаной или жареным луком.')
+])
+]});
+(function(){
+  const dinner=CATS.find(x=>x.id==='dinner');
+  const DAY=['kuritsa-duhovka','myaso-gorshochki','kuritsa-maggi','tunets-steyk','tilapiya','skumbriya','onigiri','vareniki','pelmeni','krylya','nyoki','karbonara','bolonez','makarony-flotski'];
+  const out=[];
+  [['На неделю',false],['На день',true]].forEach(([sec,isDay])=>{
+    dinner.groups.forEach(g=>{
+      const ds=g.dishes.filter(d=>DAY.includes(d.id)===isDay);
+      if(ds.length){const ng=G(g.title,ds);ng.section=sec;out.push(ng);}
+    });
+  });
+  dinner.groups=out;
+})();
+CATS.push({id:'sides',tab:'Гарниры',groups:[
+G('Картофель',[
+D('pyure','Картофельное пюре',100,'картофель; молоко; сливочное масло; соль','Очистите картофель, нарежьте и сварите в подсоленной воде 15–20 минут. | Слейте воду, оставив немного отвара. | Разомните картофель, добавьте горячее молоко и масло. | Взбейте до однородности.',['kur-otbivnye','kur-kotlety','svin-otbivnye','svin-kotlety','gulyash','bef','tefteli','kabachkovye-kotlety']),
+D('varenyi-kartofel','Варёный картофель',80,'картофель; вода; соль; сливочное масло; укроп','Очистите картофель и нарежьте крупными кусочками. | Залейте холодной подсоленной водой и доведите до кипения. | Варите 15–20 минут до мягкости, пока вилка легко входит. | Слейте воду, добавьте масло и укроп, аккуратно встряхните.',['kur-otbivnye','kur-kotlety','svin-otbivnye','svin-kotlety','gulyash','bef','tefteli','kabachkovye-kotlety']),
+D('zapechennyi-kartofel','Запечённый картофель',110,'картофель; растительное масло; соль; чеснок; специи','Нарежьте картофель дольками и смешайте с маслом, солью, чесноком и специями. | Выложите на противень в один слой. | Запекайте при 200 °C 35–40 минут, перевернув один раз.',['kur-otbivnye','kur-kotlety','svin-otbivnye','svin-kotlety','tefteli'])
+]),
+G('Крупы',[
+D('grechka','Гречка',110,'гречневая крупа; вода; соль; сливочное масло','Переберите и промойте крупу. | Залейте водой в пропорции 1 к 2 и посолите. | Доведите до кипения, убавьте огонь и варите под крышкой 15–20 минут. | Добавьте масло и дайте постоять 5 минут.',['kuritsa-slivki','kur-otbivnye','kur-kotlety','svin-otbivnye','svin-kotlety','gulyash','bef','tefteli']),
+D('ris','Рис',130,'рис; вода; соль; сливочное масло','Промойте рис до прозрачной воды. | Залейте водой в пропорции 1 к 2 и посолите. | Доведите до кипения, накройте крышкой и варите на слабом огне 15–18 минут. | Не открывая крышку, дайте постоять 5–10 минут.',['kuritsa-kislo-sladkaya','kur-otbivnye','kur-kotlety','svin-otbivnye','svin-kotlety','gulyash','bef','tefteli']),
+D('bulgur','Булгур',100,'булгур; вода или бульон; соль; сливочное масло','Промойте булгур. | Залейте кипятком или бульоном в пропорции 1 к 2 и посолите. | Накройте крышкой и варите на слабом огне 12–15 минут. | Добавьте масло и перемешайте.',['kuritsa-slivki','kuritsa-kislo-sladkaya','kur-otbivnye','gulyash','bef','tunets-steyk','tilapiya','kabachkovye-kotlety'])
+]),
+G('Макароны',[
+D('makarony','Макароны',150,'макароны или спагетти; вода; соль; сливочное или растительное масло','Вскипятите воду и посолите её. | Опустите макароны и варите по инструкции на упаковке. | Откиньте на дуршлаг и добавьте немного масла, чтобы не слиплись.',['kuritsa-slivki','kur-otbivnye','kur-kotlety','svin-otbivnye','svin-kotlety','gulyash','bef','tefteli']),
+])
+]});
+CATS.push({id:'salads',tab:'Салаты',groups:[
+G('С мясом и рыбой',[
+D('olivye','Оливье',180,'картофель; морковь; яйца; солёные огурцы; зелёный горошек; варёная колбаса; лук; майонез; соль; перец','Отварите картофель, морковь и яйца, остудите. | Нарежьте мелкими кубиками картофель, морковь, яйца, огурцы и колбасу. | Добавьте горошек и лук, посолите и перемешайте. | Храните без майонеза. Заправляйте майонезом только порцию перед подачей.'),
+D('mimoza','Мимоза',200,'консервированный тунец; картофель; морковь; яйца; лук; майонез','Отварите картофель, морковь и яйца, остудите. | Разомните тунец вилкой, смешайте с мелко нарезанным луком. | Выкладывайте слоями, смазывая майонезом: картофель, тунец с луком, белки, морковь. | Верхний слой сделайте из натёртых желтков. | Уберите в холодильник на 2–3 часа.'),
+D('boyarsky','Боярский салат',190,'ветчина; морковь по-корейски; сырые шампиньоны; сухарики; майонез','Нарежьте ветчину соломкой, свежие шампиньоны тонкими пластинками. | Смешайте ветчину, шампиньоны и морковь по-корейски. | Храните без заправки. В порцию добавляйте майонез и сухарики непосредственно перед подачей.')
+]),
+G('С сыром',[
+D('feta','Салат с фетой',110,'помидоры черри; огурцы; болгарский перец; красный лук; сыр фета; оливковое масло; лимонный сок; соль','Разрежьте помидоры черри пополам, нарежьте огурцы и перец крупными кусочками, лук тонкими полукольцами. | Перемешайте овощи. | Заправьте оливковым маслом, лимонным соком и солью. | Сверху выложите кубики феты.'),
+D('evreisky','Еврейский салат',270,'плавленый сыр; варёные яйца; чеснок; майонез','Отварите яйца вкрутую. | Охладите сыр в морозилке 15 минут, чтобы он легче тёрся. | Натрите сыр и яйца на мелкой тёрке, добавьте чеснок через пресс. | Заправьте майонезом и перемешайте. | Подавайте на хлебе или в тарталетках.')
+]),
+G('Овощные',[
+D('letniy','Летний салат с огурцами и помидорами',60,'помидоры; огурцы; лук (по желанию); зелень; растительное масло или сметана; соль','Нарежьте помидоры и огурцы, лук тонкими полукольцами. | Добавьте измельчённую зелень. | Посолите и заправьте маслом или сметаной. | Перемешайте и подавайте сразу.'),
+D('vinegret','Винегрет',80,'свёкла; картофель; морковь; солёные огурцы; квашеная капуста; лук; зелёный горошек; подсолнечное масло; соль','Отварите свёклу, картофель и морковь до мягкости, остудите и очистите. | Нарежьте овощи и огурцы кубиками. | Добавьте квашеную капусту, лук и горошек. | Заправьте маслом и посолите. Свёклу лучше сначала смешать с маслом, чтобы она не красила остальные овощи.')
+]),
+G('Другие',[
+D('krabovy','Крабовый салат',170,'крабовые палочки; консервированная кукуруза; яйца; свежий огурец; майонез; соль; зелень','Отварите яйца и охладите. | Нарежьте крабовые палочки, яйца и огурец кубиками. | Добавьте кукурузу, соль и зелень, перемешайте. | Храните без майонеза. Заправляйте майонезом только порцию перед подачей.')
+])
+]});
+CATS.push({id:'desserts',tab:'Десерты',groups:[
+G('Творожные',[
+D('sufle','Творожное суфле',60,'замороженная вишня; йогурт без сахара; обезжиренный творог; подсластитель; желатин','Разведите 15 г желатина кипятком. | Залейте замороженную вишню немного водой, добавьте подсластитель и разведённый желатин. Оставьте на 15 минут. | Хорошо перемешайте и вылейте в форму. Уберите в холодильник на 2 часа. | Разведите ещё 15 г желатина в кипятке. Погружным блендером взбейте творог, йогурт, желатин и подсластитель. | Залейте творожную массу вторым слоем поверх ягодного желе и уберите в холодильник на 2–3 часа.')
+]),
+G('Фрукты',[
+D('yabloki','Запечённые яблоки',90,'яблоки; мёд или сахар; корица; орехи или изюм','Вымойте яблоки и вырежьте сердцевину, не прорезая дно. | Заполните начинкой из мёда, корицы, орехов и изюма. | Выложите в форму и влейте на дно немного воды. | Запекайте при 180 °C 25–30 минут до мягкости.'),
+D('fruktovy','Фруктовый салат',70,'яблоки; бананы; апельсины или мандарины; киви; виноград; йогурт или мёд; лимонный сок','Вымойте и очистите фрукты. | Нарежьте кусочками примерно одного размера. | Сбрызните яблоки и бананы лимонным соком, чтобы не темнели. | Заправьте йогуртом или мёдом и перемешайте. | Подавайте сразу.')
+]),
+G('Другие',[
+D('pechenaya-tykva','Печёная тыква',80,'тыква; мёд; корица; сливочное масло; грецкие орехи','Очистите тыкву от кожуры и семян, нарежьте дольками толщиной 1,5–2 см. | Выложите на противень с пергаментом, сбрызните растопленным маслом и мёдом, посыпьте корицей. | Запекайте при 190 °C 25–30 минут, перевернув один раз, до мягкости и золотистых краёв. | Посыпьте рублеными орехами и подавайте тёплой.'),
+D('tiramisu','Тирамису',280,'маскарпоне; яйца; сахар; печенье савоярди; крепкий кофе; какао','Взбейте желтки с половиной сахара, добавьте маскарпоне. | Белки взбейте с остальным сахаром до плотных пиков и вмешайте в крем. | Остудите кофе и быстро обмакните в него печенье. | Выложите слой печенья в форму, сверху слой крема. Повторите. | Уберите в холодильник минимум на 6 часов, лучше на ночь. | Перед подачей посыпьте какао.')
+])
+]});
+/* Состав с граммовками, на 2 порции */
+const AMT={
+'yaichnitsa':'яйца — 4 шт. (около 200 г); сосиски — 2 шт.; сливочное или растительное масло — 10 г; соль — 2 г; чёрный перец — по вкусу',
+'yaytsa-varenye':'яйца — 4 шт. (около 200 г); вода — 1 л; соль — 5 г',
+'omlet':'яйца — 4 шт. (около 200 г); молоко — 80 мл; сосиски — 2 шт.; шампиньоны — 100 г; лук — 60 г; сливочное масло — 20 г; соль — 2 г',
+'skrembl':'яйца — 4 шт. (около 200 г); молоко или сливки — 40 мл; сосиски — 2 шт.; шампиньоны — 100 г; лук — 60 г; сливочное масло — 25 г; соль — 2 г; чёрный перец — по вкусу',
+'shakshuka':'яйца — 4 шт. (около 200 г); помидоры — 400 г; болгарский перец — 150 г; лук — 100 г; чеснок — 10 г (2 зубчика); паприка — 3 г; растительное масло — 20 мл; соль — 4 г; перец — по вкусу; зелёный лук — 15 г',
+'buterbrody':'хлеб или батон — 120 г (4 ломтика); колбаса — 80 г; сыр — 60 г; сливочное масло — 20 г (по желанию)',
+'goryachie-buterbrody':'батон — 150 г (6 ломтиков); колбаса — 100 г; сыр — 100 г; кетчуп или майонез — 20 г (по желанию)',
+'grenki':'хлеб или батон — 200 г (6 ломтиков); яйца — 2 шт.; молоко — 60 мл; соль — 2 г; растительное масло — 30 мл',
+'tost-avokado':'хлеб для тостов — 100 г (4 ломтика); авокадо — 150 г мякоти (1 шт.); лимонный сок — 10 мл; соль — 2 г; перец — по вкусу; яйца — 2 шт. (по желанию)',
+'tost-ryba':'хлеб для тостов — 100 г (4 ломтика); слабосолёная красная рыба — 120 г; сливочный сыр — 80 г; зелень — 10 г; лимон — 20 г',
+'brusketta-tunets':'чиабатта — 150 г (4 ломтика); творожный сыр — 80 г; тунец консервированный — 140 г (1 банка); помидоры — 150 г; салатные листья — 40 г (4 листа); яйца — 4 шт. (200 г); уксус 9% — 10 мл; соль — 3 г; растительное масло — 10 мл; сахар — 2 г (щепотка)',
+'pita-tunets':'пита — 4 шт.; яйца — 4 шт. (200 г); творожный сыр — 160 г; тунец консервированный — 280 г (2 банки); помидоры — 300 г; растительное масло — 30 мл; соль — 5 г; сахар — 3 г (щепотка)',
+'brusketta-griby':'чиабатта — 150 г (4 ломтика); творожный сыр — 80 г; шампиньоны — 250 г; репчатый лук — 100 г; чеснок — 10 г (2 зубчика); помидоры — 150 г; салатные листья — 40 г (4 листа); яйца — 4 шт. (200 г); уксус 9% — 10 мл; растительное масло — 25 мл; соль — 5 г; перец — по вкусу; сахар — 2 г (щепотка)',
+'pita-griby':'пита — 4 шт.; яйца — 4 шт. (200 г); творожный сыр — 160 г; шампиньоны — 500 г; репчатый лук — 200 г; помидоры — 300 г; растительное масло — 50 мл; соль — 8 г; перец — по вкусу; сахар — 3 г (щепотка)',
+'kabachkovye-oladi':'кабачки — 4 средних; яйца — 2 шт.; мука — по ощущению (до густого теста); соль — по вкусу; перец — по вкусу; чеснок — немного, для чесночной нотки; растительное масло для жарки — по необходимости',
+'draniki':'картофель — 500 г; лук — 60 г; яйцо — 1 шт. (50 г); мука — 40 г; соль — 5 г; перец — по вкусу; растительное масло — 50 мл; сметана для подачи — 60 г',
+'manka':'молоко — 400 мл; манная крупа — 40 г; сахар — 15 г; сливочное масло — 10 г; соль — 1 г',
+'ovsyanka':'овсяные хлопья — 100 г; молоко — 600 мл; изюм — 30 г (заранее размочить в кипятке); банан — 1 шт. (по половинке на порцию); сахар или мёд — 15 г; сливочное масло — 10 г; соль — 1 г',
+'khlopya':'сухие хлопья — 200 г; молоко — 400 мл',
+'myusli':'мюсли — 160 г; молоко или йогурт — 440 мл; фрукты или ягоды — 100 г (по желанию)',
+'zapekanka':'творог — 600 г; яйца — 3 шт.; сахар — 3 ст. л.; манка — 3 ст. л. (и ещё немного для формы); сметана — 3 ст. л.; соль — щепотка; молоко — 30 мл; замороженная вишня — по вкусу; сливочное масло для формы — по необходимости',
+'lenivye-vareniki':'творог — 400 г; яйцо — 1 шт. (50 г); мука — 100 г (и ещё 20 г для посыпки); сахар — 25 г; соль — 2 г; сливочное масло — 20 г; сметана для подачи — 60 г',
+'syrniki':'мягкий творог — 360 г; желток — 1 шт.; сахар — 1 ст. л.; манка — 4 ст. л. (для обваливания); растительное масло для жарки — по необходимости',
+'bliny':'молоко — 500 мл; яйца — 2 шт.; соль — 0,5 ч. л.; сахар — 1 ст. л.; ванильный сахар — по вкусу; мука — 200 г; растительное масло — 2 ст. л.',
+'pankeiki':'мука — 150 г; молоко — 150 мл; яйцо — 1 шт. (50 г); сахар — 25 г; разрыхлитель — 6 г (1 ч. л.); сливочное масло — 20 г; соль — 1 г; растительное масло для сковороды — 10 мл; мёд или сироп для подачи — 30 г',
+'bananovye-oladi':'бананы — 250 г (2 шт.); яйцо — 1 шт. (50 г); мука — 120 г; разрыхлитель — 5 г; молоко или кефир — 80 мл; сахар — 15 г (по желанию); растительное масло — 30 мл',
+'sup-kurinyi':'куриные бёдра или голени на кости — 2 шт.; вода — 1,5 л; лук — 80 г; морковь — 120 г (половина в бульон, половина в суп); чеснок — 10 г (2 зубчика); картофель — 250 г; соль — 8 г; лавровый лист — 1 шт.; укроп — 15 г; растительное масло — 15 мл; перец горошком — 5 шт.',
+'sup-lapsha':'куриные бёдра или голени на кости — 2 шт.; вода — 1,5 л; вермишель или лапша — 60 г; лук — 80 г; морковь — 120 г; чеснок — 10 г (2 зубчика); картофель — 200 г; яйца — 2 шт. (100 г, для подачи); соль — 8 г; лавровый лист — 1 шт.; укроп — 20 г; растительное масло — 15 мл; перец горошком — 5 шт.',
+'sup-frikadelki':'куриные бёдра или голени на кости — 2 шт.; куриный фарш — 250 г; вода — 1,5 л; лук — 120 г (80 г в бульон и 40 г в фарш); морковь — 120 г; чеснок — 10 г (2 зубчика); картофель — 250 г; соль — 8 г; перец — по вкусу; лавровый лист — 1 шт.; зелень — 15 г; растительное масло — 15 мл; перец горошком — 5 шт.',
+'sup-syrnyi':'плавленый сыр — 200 г; куриные бёдра или голени на кости — 2 шт.; копчёная грудинка — 100 г; вода — 1,5 л; картофель — 250 г; морковь — 100 г; лук — 80 г; чеснок — 10 г (2 зубчика); соль — 6 г; зелень — 15 г; сухарики — 30 г (по желанию); растительное масло — 15 мл; перец горошком — 5 шт.',
+'sup-gribnoi':'шампиньоны — 300 г; куриные бёдра или голени на кости — 2 шт.; вода — 1,3 л; картофель — 250 г; лук — 100 г; морковь — 60 г; чеснок — 10 г (2 зубчика); сливки — 150 мл; сливочное масло — 20 г; соль — 6 г; перец — по вкусу; лавровый лист — 1 шт.; перец горошком — 5 шт.',
+'borsch':'говяжья грудинка или рёбра на кости (либо свиные рёбрышки, либо куриные бёдра) — 500 г; вода — 1,8 л; свёкла — 200 г; капуста — 200 г; картофель — 250 г; морковь — 120 г; лук — 100 г; томатная паста — 30 г; чеснок — 15 г (3 зубчика); соль — 10 г; лавровый лист — 1 шт.; сметана для подачи — 60 г; зелень — 15 г; растительное масло — 30 мл; перец горошком — 5 шт.',
+'solyanka':'говяжья голяшка или рёбра на кости (либо куриные бёдра) — 400 г; вода — 1,5 л; копчёные колбаски и ветчина — 200 г; солёные огурцы — 120 г; лук — 120 г; морковь — 60 г; чеснок — 10 г (2 зубчика); томатная паста — 30 г; маслины — 50 г; лимон — 40 г (2 дольки); сметана — 60 г; соль — 5 г; лавровый лист — 1 шт.; растительное масло — 20 мл; перец горошком — 5 шт.',
+'sup-goroshek':'горох — 150 г; копчёные рёбрышки или бекон — 200 г; вода — 1,5 л; картофель — 250 г; морковь — 80 г; лук — 80 г; соль — 8 г; лавровый лист — 1 шт.; сухарики — 30 г; растительное масло — 15 мл',
+'ukha':'рыба (красная или белая) — 400 г; вода — 1,2 л; картофель — 250 г; морковь — 80 г; лук — 80 г; лавровый лист — 1 шт.; перец горошком — 5 шт.; соль — 8 г; зелень — 15 г; лимон — 30 г (2 дольки)',
+'okroshka':'кефир или айран — 700 мл; картофель — 250 г; яйца — 3 шт. (150 г); огурцы — 200 г; редис — 100 г; варёная колбаса докторская — 200 г; зелёный лук — 30 г; укроп — 20 г; соль — 5 г; сметана — 60 г',
+'kuritsa-kislo-sladkaya':'филе куриного бедра — 260 г; болгарский перец — 100 г; морковь — 65 г; лук — 65 г; соевый соус — 20 мл; кетчуп — 25 г; мёд — 15 г; уксус 9% — 10 мл; крахмал — 20 г; вода — 50 мл; растительное масло — 30 мл',
+'kuritsa-duhovka':'куриные бёдра или голени — 600 г; картофель — 600 г; лук — 100 г; чеснок — 15 г (3 зубчика); растительное масло — 30 мл; паприка — 5 г; соль — 8 г; перец — по вкусу',
+'kuritsa-slivki':'филе куриного бедра — 260 г; шампиньоны — 160 г; лук — 65 г; сливки 20% — 130 мл; чеснок — 10 г (2 зубчика); сливочное масло — 15 г; соль — 4 г; перец — по вкусу; зелень — 10 г',
+'kuritsa-maggi':'куриное филе — 500 г; смесь Maggi в листах — 1 упаковка; растительное масло — по инструкции на упаковке',
+'krylya':'куриные крылья — 600 г; мука — 120 г; паприка — 5 г; чёрный перец — 2 г; сухой чеснок — 4 г; соль — 6 г; вода (чтобы окунуть) — 100 мл; растительное масло для жарки — 500 мл',
+'kur-otbivnye':'куриная грудка — 1 кг; соль — по вкусу; яйца — 3 шт.; соевый соус — 2 ст. л.; чеснок — 1 ч. л.; чёрный перец — 0,25 ч. л.; приправа для курицы — 1 ч. л.; растительное масло для жарки — по необходимости',
+'kur-kotlety':'куриный фарш из бедренного филе — 500 г; лук — 100 г; яйцо — 1 шт. (50 г); хлеб — 60 г и молоко — 60 мл для размачивания; панировочные сухари — 60 г; соль — 6 г; перец — по вкусу; растительное масло — 50 мл',
+'svin-otbivnye':'свиная шея или корейка — 500 г; яйца — 2 шт. (100 г); мука — 60 г; соль — 6 г; перец — по вкусу; растительное масло — 50 мл',
+'myaso-gorshochki':'свинина или говядина — 400 г; картофель — 500 г; морковь — 100 г; лук — 100 г; чеснок — 10 г (2 зубчика); лавровый лист — 2 шт.; соль — 8 г; перец — 2 г; растительное масло — 30 мл; бульон или вода — 300 мл; сметана (по желанию) — 40 г',
+'svin-kotlety':'фарш из свиной шеи и говяжьей лопатки — 500 г; лук — 100 г; яйцо — 1 шт. (50 г); хлеб — 60 г и молоко — 60 мл для размачивания; чеснок — 10 г (2 зубчика); панировочные сухари — 60 г; соль — 6 г; перец — по вкусу; растительное масло — 50 мл',
+'gulyash':'говяжья лопатка или шея (либо свиная шея) — 300 г; лук — 90 г; морковь — 60 г; томатная паста — 25 г; мука — 12 г; вода — 250 мл; соль — 4 г; перец — по вкусу; лавровый лист — 1 шт.; растительное масло — 20 мл',
+'bef':'говяжья вырезка или тонкий край — 300 г; лук — 80 г; шампиньоны — 130 г; сметана — 100 г; горчица — 7 г; соль — 3 г; перец — по вкусу; растительное масло — 30 мл',
+'tefteli':'фарш — 500 г; рис — 80 г; лук — 100 г; яйцо — 1 шт. (50 г); морковь — 80 г; томатная паста — 40 г; сметана — 60 г; мука — 40 г; вода — 300 мл; соль — 6 г; перец — по вкусу; лавровый лист — 1 шт.',
+'tushenaya-kartoshka':'картофель — 600 г; свиная шея, говяжья лопатка, бедро индейки или куриные бёдра — 400 г; лук — 100 г; морковь — 100 г; томатная паста — 20 г; свежие помидоры — 200 г; вода — 250 мл; соль — 8 г; перец — по вкусу; лавровый лист — 1 шт.; растительное масло — 30 мл; сахар — 2 г (щепотка)',
+'kapusta-serdechki':'белокочанная капуста — 600 г; куриные сердечки — 300 г; лук — 100 г; морковь — 100 г; томатная паста — 30 г; вода — 100 мл; соль — 6 г; перец — по вкусу; лавровый лист — 1 шт.; растительное масло — 30 мл',
+'plov':'рис — 250 г; свиная шея, говяжья грудинка или куриные бёдра — 400 г; морковь — 250 г; лук — 150 г; чеснок — 40 г (1 головка); зира — 3 г; барбарис — 5 г; соль — 8 г; растительное масло — 80 мл; вода — 500 мл',
+'grechka-kupecheski':'гречка — 200 г; мясо (свиная шея или говяжья лопатка) — 300 г; лук — 100 г; морковь — 100 г; чеснок — 10 г (2 зубчика); вода — 400 мл; соль — 6 г; перец — по вкусу; растительное масло — 30 мл',
+'makarony-flotski':'макароны — 250 г; фарш (свино-говяжий, свиной или куриный) — 300 г; лук — 120 г; соль — 8 г; перец — по вкусу; растительное масло — 30 мл; сыр — 40 г (по желанию)',
+'skumbriya':'картофель — 600 г; скумбрия атлантическая — 400 г (1 тушка); сливочное масло — 60 г; растительное масло для рыбы — 20 мл; соль — 8 г; перец — по вкусу; зелень — 15 г',
+'tunets-steyk':'стейк тунца — 300 г (2 шт.); кунжут — 40 г; соевый соус — 20 мл; растительное масло — 20 мл; соль — 2 г; перец — по вкусу',
+'tilapiya':'филе тилапии — 400 г; панировочные сухари — 100 г; лимон — 40 г (полшт.); соль — 5 г; перец — по вкусу; растительное масло — 80 мл',
+'karbonara':'спагетти — 200 г; бекон — 120 г; яйцо — 1 шт. (50 г) и желтки — 2 шт. (40 г); пармезан или твёрдый сыр — 60 г; чёрный перец — 2 г; соль для воды — 10 г',
+'bolonez':'спагетти — 200 г; говяжий или свино-говяжий фарш — 300 г; лук — 100 г; морковь — 70 г; чеснок — 10 г (2 зубчика); томатная паста — 50 г; вода — 150 мл; итальянские травы — 2 г; соль — 5 г; перец — по вкусу; сыр — 30 г; растительное масло — 20 мл',
+'nyoki':'картофель — 500 г; мука — 150 г; яйцо — 1 шт.; соль — 5 г; сливки — 150 мл; пармезан или твёрдый сыр — 40 г; сливочное масло — 20 г; чеснок — 5 г (1 зубчик)',
+'udon':'лапша удон — 300 г; куриное филе бедра, бедро индейки или свиная шея — 250 г; болгарский перец — 120 г; морковь — 80 г; капуста — 150 г; лук — 80 г; чеснок — 10 г (2 зубчика); соевый соус — 40 мл; растительное масло — 30 мл; кунжут — 10 г (для подачи); зелёный лук — 20 г (для подачи)',
+'onigiri':'рис для суши — 200 г (сухой); вода для варки — 250 мл; нори — 2 листа (6 г); консервированный тунец — 80 г; майонез — 20 г; соль — 4 г',
+'kabachkovye-kotlety':'куриный фарш — 800 г; отжатые кабачки — 450 г; лук — 1 шт.; чеснок — 2 зубчика (10 г); панировочные сухари — 60 г; яйцо — 1 шт.; соль — 1 ч. л.; смесь перцев — 0,5 ч. л.; тимьян — 0,5 ч. л.; сливочное масло — немного; растительное масло для обжарки — немного',
+'pelmeni':'пельмени — 400 г; вода — 2 л; соль — 10 г; лавровый лист — 1 шт.; сметана или сливочное масло — 40 г; перец — по вкусу',
+'vareniki':'вареники — 400 г; вода — 2 л; соль — 10 г; сметана — 60 г; жареный лук — 40 г',
+'varenyi-kartofel':'картофель — 600 г; вода — 1 л; соль — 8 г; сливочное масло — 20 г; укроп — 10 г',
+'pyure':'картофель — 600 г; молоко — 100 мл; сливочное масло — 40 г; соль — 6 г',
+'zapechennyi-kartofel':'картофель — 600 г; растительное масло — 30 мл; соль — 6 г; чеснок — 15 г (3 зубчика); специи (паприка, сушёные травы) — 4 г',
+'grechka':'гречневая крупа — 160 г; вода — 320 мл; соль — 3 г; сливочное масло — 15 г',
+'ris':'рис — 160 г; вода — 320 мл; соль — 3 г; сливочное масло — 15 г',
+'bulgur':'булгур — 160 г; вода или бульон — 320 мл; соль — 3 г; сливочное масло — 15 г',
+'makarony':'макароны или спагетти — 200 г; вода — 2 л; соль — 15 г; сливочное или растительное масло — 10 г',
+'olivye':'картофель — 300 г; морковь — 150 г; яйца — 4 шт. (200 г); солёные огурцы — 150 г; зелёный горошек — 150 г; варёная колбаса — 250 г; лук — 50 г (по желанию); майонез — 120 г (добавлять в порцию); соль — 4 г; перец — по вкусу',
+'mimoza':'консервированный тунец — 240 г (1 банка); картофель — 250 г; морковь — 150 г; яйца — 4 шт. (200 г); лук — 60 г; майонез — 150 г',
+'boyarsky':'ветчина — 250 г; морковь по-корейски — 200 г; сырые шампиньоны — 200 г; сухарики — 60 г (добавлять в порцию); майонез — 100 г (добавлять в порцию)',
+'feta':'помидоры черри — 300 г; огурцы — 200 г; болгарский перец — 120 г; красный лук — 50 г; сыр фета — 120 г; оливковое масло — 30 мл; лимонный сок — 15 мл; соль — 3 г',
+'evreisky':'плавленый сыр — 200 г; яйца — 3 шт. (150 г); чеснок — 10 г (2 зубчика); майонез — 80 г',
+'letniy':'помидоры — 300 г; огурцы — 250 г; лук — 40 г (по желанию); зелень — 20 г; растительное масло или сметана — 30 г; соль — 3 г',
+'vinegret':'свёкла — 250 г; картофель — 250 г; морковь — 120 г; солёные огурцы — 120 г; квашеная капуста — 100 г; лук — 60 г; зелёный горошек — 100 г; подсолнечное масло — 40 мл; соль — 3 г',
+'krabovy':'крабовые палочки — 200 г; консервированная кукуруза — 150 г; яйца — 3 шт. (150 г); свежий огурец — 150 г; майонез — 80 г (добавлять в порцию); соль — 2 г; зелень — 15 г',
+'sufle':'замороженная вишня — по вкусу; йогурт без сахара — 330 г; обезжиренный творог — 330 г; подсластитель — по вкусу; желатин — 30 г (по 15 г на ягодный и на творожный слои)',
+'yabloki':'яблоки — 600 г (4 шт.); мёд или сахар — 40 г; корица — 2 г; орехи или изюм — 60 г',
+'fruktovy':'яблоки — 150 г; бананы — 150 г; апельсины или мандарины — 150 г; киви — 100 г; виноград — 100 г; йогурт или мёд — 80 г; лимонный сок — 10 мл',
+'pechenaya-tykva':'тыква — 600 г; мёд — 40 г; корица — 2 г; сливочное масло — 20 г; грецкие орехи — 30 г',
+'tiramisu':'маскарпоне — 250 г; яйца — 2 шт. (100 г); сахар — 60 г; печенье савоярди — 150 г; крепкий кофе — 200 мл; какао — 10 г'
+};
+/*END DATA*/
+const CUBE='Варите с куриным кубиком Maggi: добавьте его в воду вместе с крупой.';
+const CUBEP='Варите макароны с куриным кубиком Maggi: добавьте его в подсоленную воду.';
+const CUBEB='Бульон лучше варить с куриным кубиком Maggi: вкус станет глубже.';
+const MAYO='Не заправляйте салат майонезом сразу, добавляйте его только в порцию: так салат не сдохнет кислым в холодильнике.';
+const TIPS={
+'pyure':['Добавьте больше мелко обжаренного лука: пюре станет ароматнее и вкуснее.'],
+'zapechennyi-kartofel':['За 15–20 минут до запекания замаринуйте картофель в специях и капле масла.'],
+'grechka':[CUBE],'ris':[CUBE],'bulgur':[CUBE],
+'makarony':[CUBEP],'makarony-flotski':[CUBEP],'karbonara':[CUBEP],'bolonez':[CUBEP],
+'sup-kurinyi':[CUBEB],'sup-lapsha':[CUBEB],'sup-frikadelki':[CUBEB],'sup-syrnyi':[CUBEB],'sup-gribnoi':[CUBEB],'borsch':[CUBEB],'solyanka':[CUBEB],
+'olivye':[MAYO],'krabovy':[MAYO],
+'boyarsky':['Не заправляйте салат майонезом сразу и не кладите сухарики заранее: добавляйте их только в порцию, чтобы салат не превратился в чвяку и не сдох кислым в холодильнике.']
+};
+const KV={
+'borsch':[['На говядине (грудинка, рёбра)',55],['На свинине (рёбрышки)',65],['На курице (бёдра, голени)',40]],
+'plov':[['На свинине (шея)',190],['На говядине (грудинка)',170],['На курице (бёдра)',150]],
+'gulyash':[['Из говядины (лопатка, шея)',140],['Из свинины (шея)',200]],
+'tushenaya-kartoshka':[['Со свиной шеей',130],['С говяжьей лопаткой',110]],
+'myaso-gorshochki':[['Со свиной шеей',150],['С говяжьей лопаткой',120]],
+'udon':[['С куриным бедром',130],['Со свиной шеей',170]]
+};
+const OWN=['bliny','syrniki','zapekanka','kur-otbivnye','kabachkovye-oladi','kabachkovye-kotlety','sufle'];
+TIPS['manka']=['Добавьте малиновое варенье.'];
+TIPS['lenivye-vareniki']=['Посыпьте сахаром при подаче.'];
+TIPS['syrniki']=['Полейте сгущёнкой.'];
+TIPS['bliny']=['Готовый блин смажьте сливочным маслом и посыпьте сахаром.'];
+TIPS['yaytsa-varenye']=['Если хочется жидкий желток, кладите яйца в кипяток и варите 6 минут.'];
+TIPS['omlet']=['Добавьте в смесь яиц и молока приправу «10 овощей» от Maggi.'];
+TIPS['shakshuka']=['Добавьте приправу «10 овощей» от Maggi.'];
+TIPS['sup-goroshek']=['Подайте с домашними сухариками: нарежьте хлеб мелким кубиком, обваляйте в специях и запеките.'];
+TIPS['okroshka']=['Добавьте горчицу при подаче.'];
+TIPS['kuritsa-duhovka']=['Заранее, за несколько часов, замаринуйте курицу в специях и майонезе. Картошку замаринуйте в специях минут за 30.'];
+TIPS['skumbriya']=['Подайте с красным луком, который заранее замаринован в уксусе, воде, соли и сахаре.'];
+TIPS['vareniki']=['Подайте с большим количеством сильно обжаренного на сливочном масле лука.'];
+TIPS['pyure']=['Добавьте больше обжаренного на сливочном масле лука: чем темнее, тем вкуснее.'];
+KV['tushenaya-kartoshka']=[['Со свиной шеей',130],['С говяжьей лопаткой',110],['С бедром индейки',100],['С куриными бёдрами',110]];
+KV['myaso-gorshochki']=[['Со свиной шеей',150],['С говяжьей лопаткой',120],['С куриными бёдрами',110],['С бедром индейки',110]];
+KV['udon']=[['С куриным бедром',130],['С бедром индейки',120],['Со свиной шеей',170]];
+KV['makarony-flotski']=[['Со свино-говяжьим фаршем',190],['Со свиным фаршем',210],['С куриным фаршем',160]];
+TIPS['tunets-steyk']=['Полейте соусом унаги при подаче.'];
+const PORT={'bliny':4,'syrniki':3,'zapekanka':4,'kur-otbivnye':4,'kabachkovye-oladi':4,'kabachkovye-kotlety':4,'sufle':4};
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+const app=$('#app'), tabs=$('#tabs'), modal=$('#modal'), sheet=$('#sheet'), qIn=$('#q'), qClr=$('#qclr');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const IC={
+  chev:'<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  x:'<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  back:'<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  plus:'<svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M4 12h16" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg>',
+  dice:'<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.500" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.800" fill="currentColor"/><path d="M12 2.500v6.500M12 15v6.500M2.500 12H9M15 12h6.500M5.300 5.300l4.200 4.200M14.500 14.500l4.200 4.200M18.700 5.300l-4.200 4.200M9.500 14.500l-4.200 4.200" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round"/><circle cx="17.400" cy="6.600" r="1.500" fill="currentColor"/></svg>'
+};
+
+/* ---------- рисованные блюда ---------- */
+const O='#4A2C20', L='stroke="'+O+'" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"', Lt='stroke="'+O+'" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"';
+const S=x=>'<svg viewBox="0 0 120 120" aria-hidden="true"><g filter="url(#wob)">'+x+'</g></svg>';
+const face=(x,y,k)=>'<g transform="translate('+x+' '+y+') scale('+k+')"><circle cx="-8" cy="-2" r="2.8" fill="'+O+'"/><circle cx="8" cy="-2" r="2.8" fill="'+O+'"/><circle cx="-7" cy="-3" r="1" fill="#fff"/><circle cx="9" cy="-3" r="1" fill="#fff"/><path d="M-4 3q4 5.500 8 0" fill="none" stroke="'+O+'" stroke-width="2.4" stroke-linecap="round"/><circle cx="-14" cy="3.500" r="3.600" fill="#F28C82" opacity=".6"/><circle cx="14" cy="3.500" r="3.600" fill="#F28C82" opacity=".6"/></g>';
+const plate='<ellipse cx="60" cy="82" rx="53" ry="24" fill="#FFFBF3" '+L+'/><ellipse cx="60" cy="81" rx="39" ry="15" fill="#F4E6D2"/>';
+const bowl='<path d="M10 58h100c0 30-22 48-50 48S10 88 10 58z" fill="#FFFBF3" '+L+'/>';
+const steam='<path d="M44 26c-5-5 5-8 0-14M60 26c-5-5 5-8 0-14M76 26c-5-5 5-8 0-14" fill="none" stroke="#CDB9A3" stroke-width="2.6" stroke-linecap="round"/>';
+const dill=(x,y)=>'<path d="M'+x+' '+y+'l9-7M'+(x+2)+' '+(y+6)+'l11-2M'+x+' '+(y+12)+'l9 4" stroke="#5E8C3A" stroke-width="2.6" stroke-linecap="round" fill="none"/>';
+function stack(n,y0,step,fill,w,h){let o='';const a=w/2-1;for(let i=0;i<n;i++){const y=y0-i*step;o+='<path d="M'+(60-w)+' '+y+'v-'+h+'c0-6 '+a+'-10 '+w+'-10s'+w+' 4 '+w+' 10v'+h+'c0 6-'+a+' 10-'+w+' 10s-'+w+'-4-'+w+'-10z" fill="'+fill+'" '+L+'/>';}return o;}
+const greens='<path d="M14 60c-2-14 8-24 18-22 2-10 18-14 26-6 8-8 26-4 28 8 10-2 18 6 16 20z" fill="#9CC95A" '+L+'/><path d="M30 54c4-6 8-8 12-8M70 48c6-2 10 0 14 4" fill="none" stroke="#6FA63F" stroke-width="2.4" stroke-linecap="round"/>';
+const rect=(x,y,w,h,f)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="3" fill="'+f+'" '+L+'/>';
+const cir=(x,y,r,f,l)=>'<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+f+'"'+(l===false?'':' '+L)+'/>';
+const ell=(x,y,rx,ry,f)=>'<ellipse cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" fill="'+f+'" '+L+'/>';
+const stick=(x1,y1,x2,y2)=>'<path d="M'+x1+' '+y1+'L'+x2+' '+y2+'" stroke="'+O+'" stroke-width="7" stroke-linecap="round"/><path d="M'+x1+' '+y1+'L'+x2+' '+y2+'" stroke="#D9A15E" stroke-width="3.600" stroke-linecap="round"/>';
+const strand=d=>'<path d="'+d+'" fill="none" stroke="'+O+'" stroke-width="6" stroke-linecap="round"/><path d="'+d+'" fill="none" stroke="#FFF0C4" stroke-width="3" stroke-linecap="round"/>';
+const tube=(x,y,r)=>'<g transform="translate('+x+' '+y+') rotate('+r+')"><rect x="-8" y="-16" width="16" height="32" rx="6" fill="#F3CC6A" '+L+'/><path d="M-4 -11v22M0 -12v24M4 -11v22" stroke="#D9A93E" stroke-width="1.600" stroke-linecap="round"/></g>';
+const soupBase=steam+bowl+ell(60,58,48,11,'#F2B84B')+'<path d="M28 58c6-6 10 6 16 0s10 6 16 0 10 6 16 0 6 2 10 0" fill="none" stroke="#FFF1C9" stroke-width="3" stroke-linecap="round"/>'+cir(38,61,4,'#F08A3C',false)+cir(82,61,4,'#F08A3C',false)+'<path d="M62 54c4-6 10-6 12-2-4 4-8 5-12 2z" fill="#6FA63F"/>';
+const saladB=top=>S(bowl+greens+top);
+const A={
+  egg:S(plate+'<g transform="translate(10 9)"><path d="M24 76c-4-14 8-24 22-21 8-6 24-4 30 5 10 3 13 15 4 22-7 6-18 6-27 3-10 5-24 1-29-9z" fill="#fff" '+L+'/>'+cir(52,72,13,'#F7B72E')+face(52,73,.62)+'</g>'),
+  toast:S('<path d="M22 50c0-14 12-22 24-17 8-5 20-5 28 0 12-5 24 3 24 17 0 7-3 11-7 13v32c0 8-5 12-11 12H40c-6 0-11-4-11-12V63c-4-2-7-6-7-13z" fill="#D9934C" '+L+'/><path d="M36 54h48v40c0 3-1 5-5 5H41c-4 0-5-2-5-5z" fill="#F4C879"/><path d="M42 62c10-4 24-4 36 0" stroke="#FBE3A8" stroke-width="4" fill="none" stroke-linecap="round"/><g transform="rotate(-6 60 76)">'+rect(48,68,24,15,'#FFE27A')+'</g><path d="M56 83c0 5 3 5 3 9" stroke="#FFE27A" stroke-width="4" stroke-linecap="round" fill="none"/>'),
+  curd:S(bowl+'<path d="M14 60c4-16 14-24 24-22 6-9 18-11 26-5 10-4 22 2 25 14 6 3 7 9 7 13z" fill="#FFFDF6" '+L+'/>'+cir(30,52,5,'#FFFDF6').replace(L,Lt)+cir(46,46,5.5,'#FFFDF6').replace(L,Lt)+cir(62,43,5,'#FFFDF6').replace(L,Lt)+cir(78,46,5.5,'#FFFDF6').replace(L,Lt)+cir(92,54,5,'#FFFDF6').replace(L,Lt)+cir(54,55,4.5,'#FFFDF6').replace(L,Lt)+cir(72,57,4.5,'#FFFDF6').replace(L,Lt)+cir(62,36,5.5,'#D63A57')+'<path d="M66 31c4-6 10-6 12-3-3 5-8 6-12 3z" fill="#6FA63F" '+L+'/>'),
+  pancakes:S(plate+stack(4,90,11,'#EFC27A',34,7)+'<ellipse cx="60" cy="47" rx="30" ry="8" fill="#C9751F" opacity=".85"/>'+rect(48,36,24,12,'#FFE27A')),
+  fritters:S(plate+cir(40,84,15,'#E2A74F')+cir(78,82,15,'#E2A74F')+cir(58,72,16,'#E8B05B')+'<path d="M48 66c6-4 14-4 20 0" stroke="#F4CC85" stroke-width="3" fill="none" stroke-linecap="round"/>'+ell(90,66,10,6,'#FFFDF7')+dill(96,86)),
+  porridge:S(steam+bowl+'<path d="M14 60c6-18 22-26 46-26s40 8 46 26z" fill="#FFF0D2" '+L+'/>'+cir(44,50,5,'#5B5FA6')+cir(60,43,5,'#D63A57')+cir(76,51,5,'#5B5FA6')),
+  soup:S(soupBase),
+  soupHero:S(soupBase+face(60,86,.9)),
+  okr:S(bowl+ell(60,58,48,11,'#F7F0DF')+cir(38,59,5,'#CFE79B')+cir(38,59,2,'#EEF7CF',false)+cir(60,62,4.500,'#E0472F')+cir(82,59,5,'#CFE79B')+cir(82,59,2,'#EEF7CF',false)+ell(70,55,6,4,'#FFFDF6')+cir(70,55,2,'#F7B72E',false)+dill(46,48)+dill(76,44)+'<path d="M24 30l4 6M96 28l-4 7" stroke="#CDB9A3" stroke-width="2.600" stroke-linecap="round"/>'),
+  borsch:S(steam+bowl+ell(60,58,48,11,'#B22F34')+ell(60,57,13,5,'#FFF6E6')+dill(80,50)),
+  chicken:S('<path d="M86 60C92 46 100 38 108 36C110 48 106 62 98 72z" fill="#E8C9A0" '+L+'/><path d="M84 66C92 56 104 54 112 58C108 70 98 78 90 78z" fill="#F4E6D2" '+L+'/><path d="M22 46C22 34 30 28 38 28C48 28 52 36 50 46C58 52 74 54 88 60C98 66 100 80 90 90C80 100 54 102 40 94C28 86 28 70 32 60C26 58 22 54 22 46z" fill="#FFFBF3" '+L+'/><path d="M30 30c-2-8 4-12 7-8 2-6 9-4 8 3 4-1 6 4 2 7z" fill="#E0472F" '+L+'/><path d="M22 42l-13 5 13 5z" fill="#F7B72E" '+L+'/><path d="M24 54c-2 8 4 10 7 4z" fill="#E0472F" '+L+'/>'+cir(33,40,2.8,O,false)+'<path d="M52 70c12-4 26 0 30 10-8 10-26 10-34 2z" fill="#F4E6D2" '+Lt+'/>'+stick(54,98,54,110)+stick(70,96,70,110)+'<path d="M46 112h14M62 112h14" stroke="'+O+'" stroke-width="3.600" stroke-linecap="round"/>'),
+  steak:S('<path d="M52 66c6-4 12-2 14 4" fill="none" stroke="'+O+'" stroke-width="2.600" stroke-linecap="round"/>'+rect(18,84,7,14,'#F5A9B0')+rect(38,84,7,14,'#F5A9B0')+ell(34,74,23,16,'#F9B9BF')+cir(13,66,11,'#F9B9BF')+'<path d="M8 55l-3-10 10 4zM18 54l6-9 3 10z" fill="#F29AA4" '+L+'/>'+ell(5,70,5.500,4.500,'#F28C9A')+cir(3,69,1.200,O,false)+cir(7,69,1.200,O,false)+cir(11,62,2.200,O,false)+'<path d="M26 66c4 2 6 6 4 10" stroke="#F29AA4" stroke-width="2.400" fill="none" stroke-linecap="round"/>'+rect(74,82,7,18,'#FFFBF3')+rect(98,82,7,18,'#FFFBF3')+'<path d="M117 62c4 6 2 14-2 18" fill="none" stroke="'+O+'" stroke-width="2.600" stroke-linecap="round"/>'+ell(92,68,26,17,'#FFFBF3')+'<path d="M80 60c6-4 12 0 10 8-6 4-12 2-10-8z" fill="#3A2A24"/><path d="M98 70c6-4 12 0 10 7-6 4-12 0-10-7z" fill="#3A2A24"/>'+'<path d="M56 46l-6-8M64 44l4-8" stroke="#F4D58A" stroke-width="3.400" stroke-linecap="round"/>'+'<path d="M52 52l-9-3 3 9z" fill="#3A2A24" '+L+'/>'+ell(64,58,12,11,'#FFFBF3')+ell(60,66,8,6,'#F9B9BF')+cir(58,66,1.200,O,false)+cir(63,66,1.200,O,false)+cir(62,54,2.200,O,false)),
+  fish:S('<path d="M10 60c14-22 42-26 60-10l30-16v50L70 68C52 84 24 82 10 60z" fill="#F29A7A" '+L+'/><path d="M24 70c14 8 30 6 42-4" fill="none" stroke="#F8C2AC" stroke-width="4" stroke-linecap="round"/><path d="M56 42v28M66 44v24" stroke="'+O+'" stroke-width="2" opacity=".35" stroke-linecap="round"/>'+cir(30,58,3.600,O,false)+'<path d="M12 100c8-14 28-14 36 0z" fill="#FFE066" '+L+'/>'),
+  noodles:S(bowl+ell(60,58,48,11,'#EDB05A')+'<path d="M26 58c6-5 10 5 16 0s10 5 16 0 10 5 16 0 8 4 12 0" fill="none" stroke="#FFF0C4" stroke-width="3" stroke-linecap="round"/>'+strand('M52 46c-5 5 4 8-1 13')+strand('M60 44c5 5-4 9 1 14')+strand('M68 46c-5 5 4 8-1 12')+strand('M46 48c-3 4 3 7 0 10')+stick(100,6,56,52)+stick(88,2,48,50)+cir(88,64,4,'#6FA63F',false)+cir(32,62,4,'#E0472F',false)),
+  dump:S(plate+'<path d="M24 96c0-18 12-28 22-28s22 10 22 28z" fill="#FFF8EA" '+L+'/><path d="M52 92c0-16 10-26 20-26s20 10 20 26z" fill="#FFF8EA" '+L+'/><path d="M30 90h30M58 86h28" stroke="#E6D0B8" stroke-width="2.400" stroke-dasharray="2 4" stroke-linecap="round"/>'+rect(70,54,18,10,'#FFE27A')+dill(96,72)),
+  potato:S('<ellipse cx="42" cy="78" rx="32" ry="22" transform="rotate(-14 42 78)" fill="#D8A25F" '+L+'/>'+cir(30,74,2.2,'#A8723A',false)+cir(48,88,2.2,'#A8723A',false)+cir(52,68,2.2,'#A8723A',false)+cir(34,88,2.2,'#A8723A',false)+'<ellipse cx="88" cy="84" rx="22" ry="17" transform="rotate(14 88 84)" fill="#F2DFA6" '+L+'/><ellipse cx="88" cy="84" rx="13" ry="9" transform="rotate(14 88 84)" fill="#FFF4CF"/>'+dill(60,38)),
+  buck:S(steam+bowl+'<path d="M14 60c6-18 22-26 46-26s40 8 46 26z" fill="#8A5A38" '+L+'/>'+cir(34,52,2.200,'#5D3A22',false)+cir(50,44,2.200,'#5D3A22',false)+cir(70,48,2.200,'#5D3A22',false)+cir(86,54,2.200,'#5D3A22',false)+cir(60,54,2.200,'#B98558',false)+rect(52,34,16,10,'#FFE27A')),
+  sides:S(steam+plate+'<path d="M42 82c0-16 8-28 18-28s18 12 18 28z" fill="#F7E3A0" '+L+'/>'+rect(54,56,12,7,'#FFE27A')+dill(66,50)+'<path d="M16 90c0-16 10-26 20-26s20 10 20 26z" fill="#FFFDF6" '+L+'/><path d="M26 82l4-2M36 74l4 2M32 86l5-1M42 82l3 2" stroke="#E6D0B8" stroke-width="2.400" stroke-linecap="round"/><path d="M64 90c0-16 10-26 20-26s20 10 20 26z" fill="#8A5A38" '+L+'/>'+cir(76,78,2.200,'#5D3A22',false)+cir(88,72,2.200,'#5D3A22',false)+cir(94,84,2.200,'#5D3A22',false)+cir(82,86,2.200,'#B98558',false)),
+  penne:S(plate+tube(36,78,-35)+tube(60,70,10)+tube(82,80,40)+tube(50,88,70)+tube(72,92,-20)+'<path d="M52 52c6-12 20-8 20-4-4 10-14 12-20 4z" fill="#5E9A3A" '+L+'/>'),
+  spag:S(steam+plate+ell(58,66,32,19,'#F5CE69')+'<path d="M30 66c10-14 46-14 56 0M36 72c12-10 38-10 46 0M44 62c8-6 20-6 28 0" fill="none" stroke="#D9A93E" stroke-width="2.400" stroke-linecap="round"/><path d="M106 6L74 52" stroke="'+O+'" stroke-width="7" stroke-linecap="round"/><path d="M106 6L74 52" stroke="#D8D2CA" stroke-width="3.600" stroke-linecap="round"/><path d="M74 52l-4 12M74 52l0 13M74 52l5 11" stroke="'+O+'" stroke-width="2.800" stroke-linecap="round"/>'+cir(44,58,8,'#E0472F')+'<path d="M62 54c6-12 18-8 18-4-4 8-12 10-18 4z" fill="#5E9A3A" '+L+'/>'),
+  dinner:S('<circle cx="60" cy="62" r="50" fill="#FFFBF3" '+L+'/><circle cx="60" cy="62" r="36" fill="#F4E6D2"/><ellipse cx="50" cy="56" rx="21" ry="15" transform="rotate(-18 50 56)" fill="#B8694A" '+L+'/><path d="M38 58l18-12M45 66l18-12" stroke="#8A3F2A" stroke-width="2.800" stroke-linecap="round" opacity=".7"/><path d="M60 74c0-9 12-14 22-9 7 4 5 14-2 16-10 3-20-2-20-7z" fill="#FFF4D6" '+L+'/>'+rect(70,66,10,7,'#FFE27A')+cir(40,76,4.200,'#7DB84C')+cir(50,82,4.200,'#7DB84C')+cir(32,68,4.200,'#7DB84C')),
+  saladM:saladB(ell(44,48,9,6.500,'#fff')+cir(44,48,3,'#F7B72E',false)+ell(76,46,9,6.500,'#fff')+cir(76,46,3,'#F7B72E',false)+cir(60,54,3,'#6FA63F',false)+cir(90,56,3,'#F08A3C',false)),
+  saladC:saladB(rect(34,40,13,13,'#FFF9EA')+rect(52,36,13,13,'#FFF9EA')+rect(72,42,13,13,'#FFF9EA')+'<ellipse cx="62" cy="56" rx="5" ry="4" fill="#3C3A2E"/>'+cir(92,54,6,'#E0472F')),
+  saladV:S(bowl+greens+cir(40,50,9,'#E0472F')+cir(37,48,2,'#F9D44A',false)+cir(43,52,2,'#F9D44A',false)+cir(60,44,7.500,'#CFE79B')+cir(60,44,3,'#EEF7CF',false)+cir(80,50,9,'#E0472F')+cir(77,48,2,'#F9D44A',false)+cir(83,52,2,'#F9D44A',false)+cir(94,56,7.500,'#CFE79B')+cir(94,56,3,'#EEF7CF',false)+cir(26,58,7.500,'#CFE79B')+cir(26,58,3,'#EEF7CF',false)+stick(100,14,72,44)),
+  saladO:saladB(rect(32,42,18,8,'#E8553E')+rect(54,38,18,8,'#E8553E')+rect(74,46,18,8,'#E8553E')+cir(44,56,2.600,'#F9D44A',false)+cir(64,56,2.600,'#F9D44A',false)+cir(88,38,2.600,'#F9D44A',false)),
+  souffle:S('<path d="M22 72c-4-18 10-30 22-26 8-10 28-10 34 0 14-2 22 14 16 26z" fill="#FFF0D2" '+L+'/><path d="M24 72h72l-8 30c-1 4-4 6-8 6H40c-4 0-7-2-8-6z" fill="#FFFBF3" '+L+'/><path d="M34 84h52" stroke="#EAD7BD" stroke-width="3" stroke-linecap="round"/>'+cir(60,42,6,'#D63A57')+'<path d="M64 36c6-8 14-8 16-4-4 6-10 8-16 4z" fill="#6FA63F" '+L+'/>'),
+  fruit:S('<path d="M52 40c-14-10-38-2-38 24 0 22 16 38 28 34 4-1 6-3 8-3s4 2 8 3c12 4 28-12 28-34 0-24-22-32-34-24z" fill="#E5483A" '+L+'/><path d="M52 40c0-8 2-14 6-18" fill="none" stroke="'+O+'" stroke-width="3" stroke-linecap="round"/><path d="M58 30c8-10 20-8 22-6-2 8-12 14-22 6z" fill="#6FA63F" '+L+'/><path d="M26 60c2-8 8-12 14-12" stroke="#F59A8F" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="94" cy="92" r="16" fill="#F6A23A" '+L+'/><path d="M94 78v28M80 92h28M84 82l20 20M104 82L84 102" stroke="#FCD38A" stroke-width="2"/>'),
+  cupcake:S('<path d="M28 66h64l-8 38c-1 4-3 6-7 6H43c-4 0-6-2-7-6z" fill="#F29A8A" '+L+'/><path d="M42 70l4 36M54 70l2 40M66 70l-2 40M78 70l-4 36" stroke="#D97A6A" stroke-width="2.200" stroke-linecap="round"/><path d="M20 68c-4-10 4-18 14-18h52c10 0 18 8 14 18z" fill="#F9C5CF" '+L+'/><path d="M30 50c-2-10 6-18 16-18h28c10 0 18 8 16 18z" fill="#FBD3DA" '+L+'/><path d="M42 32c-2-8 6-14 14-14h8c8 0 14 6 12 14z" fill="#F9C5CF" '+L+'/>'+cir(60,14,7,'#D63A57')+'<path d="M60 8c0-3 2-5 5-6" fill="none" stroke="'+O+'" stroke-width="2.400" stroke-linecap="round"/><path d="M38 60l5-3M70 44l5 3M52 26l4-3M82 60l5-3M30 46l4 3" stroke="#6FA3E0" stroke-width="3" stroke-linecap="round"/><path d="M62 60l5 2M46 42l5-2M76 28l-1 5" stroke="#F4C842" stroke-width="3" stroke-linecap="round"/>'),
+  tira:S('<clipPath id="verr"><path d="M24 36h72l-8 66c-1 5-4 8-9 8H41c-5 0-8-3-9-8z"/></clipPath><path d="M24 36h72l-8 66c-1 5-4 8-9 8H41c-5 0-8-3-9-8z" fill="#FFFBF3"/><g clip-path="url(#verr)"><rect x="14" y="88" width="92" height="24" fill="#8A5A38"/><rect x="14" y="74" width="92" height="14" fill="#FFF1D6"/><rect x="14" y="62" width="92" height="12" fill="#A87248"/><rect x="14" y="48" width="92" height="14" fill="#FFF1D6"/><rect x="14" y="36" width="92" height="12" fill="#7A4A2E"/></g><path d="M24 36h72l-8 66c-1 5-4 8-9 8H41c-5 0-8-3-9-8z" fill="none" '+L+'/><path d="M20 36h80" stroke="'+O+'" stroke-width="3" stroke-linecap="round"/>'+cir(52,30,3,'#7A4A2E',false)+cir(70,28,3,'#7A4A2E',false))
+};
+const EMB={breakfast:'egg',lunch:'soup',dinner:'dinner',sides:'sides',salads:'saladV',desserts:'cupcake'};
+const GILL={'Яйца':'egg','Бутерброды и тосты':'toast','Овощные блюда':'fritters','Каши и хлопья':'porridge','Творожные блюда':'curd','Блины и оладьи':'pancakes','Куриные супы':'soup','Супы':'borsch','Холодные супы':'okr','Курица':'chicken','Свинина и мясные блюда':'steak','Рыба':'fish','Паста и азиатские блюда':'noodles','Остальные блюда':'dump','Картофель':'potato','Крупы':'buck','Макароны':'penne','С мясом и рыбой':'saladM','С сыром':'saladC','Овощные':'saladV','salads|Другие':'saladO','Творожные':'souffle','Фрукты':'fruit','desserts|Другие':'tira'};
+const TVB={"egg": "5.0 15.0 110.0 110.0", "soup": "8.0 7.0 104.0 104.0", "dinner": "8.0 0.0 104.0 104.0", "sides": "5.0 4.0 110.0 110.0", "saladV": "8.0 8.0 104.0 104.0", "cupcake": "3.9 0.0 112.0 112.0"};
+const tileArt=k=>A[k].replace(/<path d="M44 26[^>]*\/>/,'').replace('viewBox="0 0 120 120"','viewBox="'+TVB[k]+'"');
+const artG=(c,g)=>A[GILL[(g.title==='Другие'?c.id+'|':'')+g.title]||EMB[c.id]];
+
+/* ---------- данные ---------- */
+const byId={}, byCat={};
+CATS.forEach(c=>{
+  byCat[c.id]=c; c.all=[];
+  c.groups.forEach((g,gi)=>g.dishes.forEach(d=>{
+    d.cat=c; d.group=g; d.gi=gi; d.base=PORT[d.id]||2; d.tips=TIPS[d.id]||null; d.kv=KV[d.id]||null; if(d.kv) d.kcal=d.kv[0][1];
+    const raw=AMT[d.id];
+    d.items=raw? raw.split('; ').map(s=>{const k=s.indexOf(' — ');return k<0?[s,'']:[s.slice(0,k),s.slice(k+3)];}) : d.ing.map(i=>[i,'']);
+    d.ing=d.items.map(x=>x[0]);
+    byId[d.id]=d; c.all.push(d);
+  }));
+});
+const norm=s=>s.toLowerCase().replace(/ё/g,'е');
+CATS.forEach(c=>c.all.forEach(x=>{ if(x.cat.id==='sides'&&x.addons) x.addons.forEach(a=>{ const t=byId[a]; if(t&&t.cat.id==='dinner'){ (t.sides=t.sides||[]).push(x.id); } }); }));
+const words=s=>norm(s).split(/[^а-я0-9]+/).filter(Boolean);
+CATS.forEach(c=>c.all.forEach(d=>{d._nw=words(d.name);d._iw=words(d.ing.join(' '));}));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+let route='home', query='';
+try{const h=location.hash.slice(1); if(h==='home'||byCat[h]) route=h;}catch(e){}
+
+/* ---------- вкладки ---------- */
+function buildTabs(){
+  tabs.innerHTML=['<button class="tab" type="button" data-act="route" data-route="home">Главная</button>']
+    .concat(CATS.map(c=>'<button class="tab" type="button" data-act="route" data-route="'+c.id+'">'+esc(c.tab)+'</button>')).join('');
+}
+function updateTabs(){
+  tabs.querySelectorAll('.tab').forEach(b=>{
+    const on=!query.trim() && b.dataset.route===route;
+    if(on){b.setAttribute('aria-current','page'); if(tabs.scrollTo) tabs.scrollTo({left:Math.max(0,b.offsetLeft-16),behavior:'auto'});}
+    else b.removeAttribute('aria-current');
+  });
+}
+
+/* ---------- страницы ---------- */
+function homeHTML(){
+  const tiles=CATS.map((c,i)=>'<button class="tile p'+i+'" type="button" data-act="route" data-route="'+c.id+'"><span class="tt">'+esc(c.tab)+'</span><span class="tart">'+tileArt(EMB[c.id])+'</span></button>').join('');
+  const names=shuffle(CATS.reduce((a,c)=>a.concat(c.all.map(d=>d.name)),[]));
+  const seg='<span class="seg">'+names.map(t=>esc(t)+'<b>•</b>').join('')+'</span>';
+  return '<section class="hero"><svg class="bunting" viewBox="0 0 600 44" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q150 22 300 4Q450 22 600 4" fill="none" stroke="#B98F70" stroke-width="1.6"/><path d="M16 6.2l28 0-14 26z" fill="#E8907A"/><path d="M76 10.6l28 0-14 26z" fill="#F2CF72"/><path d="M136 12.0l28 0-14 26z" fill="#C9695A"/><path d="M196 10.6l28 0-14 26z" fill="#FFF3DC"/><path d="M256 6.2l28 0-14 26z" fill="#D9825F"/><path d="M316 6.2l28 0-14 26z" fill="#E8907A"/><path d="M376 10.6l28 0-14 26z" fill="#F2CF72"/><path d="M436 12.0l28 0-14 26z" fill="#C9695A"/><path d="M496 10.6l28 0-14 26z" fill="#FFF3DC"/><path d="M556 6.2l28 0-14 26z" fill="#D9825F"/></svg><div class="copy"><h1>Домашнее меню</h1>'+
+    '<button class="btn cta" type="button" data-act="random">'+IC.dice+' Случайное блюдо</button></div><div class="art">'+A.soupHero+'</div></section>'+
+    '<div class="ribbon" aria-hidden="true"><div class="track" style="animation-duration:'+Math.round(names.length*2.6)+'s">'+seg+seg+'</div></div>'+
+    '<div class="sec-title"><h2>Разделы</h2><i></i></div><div class="tiles">'+tiles+'</div><p class="bon"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C5 15 3 11 3 8a4.500 4.500 0 018-2.700A4.500 4.500 0 0121 8c0 3-2 7-9 13z" fill="currentColor"/></svg> Приятного аппетита!</p>';
+}
+
+function rowHTML(d,sub){
+  let pair='';
+  if(d.addons){
+    const items=d.addons.map(a=>byId[a]?'<li><button type="button" data-act="dish" data-id="'+a+'">'+esc(byId[a].name)+'</button></li>':'<li>'+esc(a)+'</li>').join('');
+    pair='<div class="pair"><button class="popbtn" type="button" data-act="pop" aria-expanded="false">'+IC.plus+' С чем подать</button><div class="pop" hidden><h4>Подойдёт к гарниру</h4><ul>'+items+'</ul></div></div>';
+  }
+  if(d.tips){
+    pair+='<div class="pair"><button class="popbtn" type="button" data-act="pop" aria-expanded="false">'+IC.plus+' Как улучшить?</button><div class="pop" hidden><h4>Лайфхак</h4><ul>'+d.tips.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></div>';
+  }
+  pair='';
+  return '<li class="row"><button class="ritem" type="button" data-act="dish" data-id="'+d.id+'"><span class="nm">'+esc(d.name)+(sub?'<small>'+esc(sub)+'</small>':'')+'</span><i class="lead"></i>'+IC.chev+'</button>'+pair+'</li>';
+}
+function groupBlock(c,g,gi){
+  return '<section class="group g'+(gi%5)+'"><div class="ghead"><span class="gpill">'+esc(g.title)+'</span><span class="gart">'+artG(c,g)+'</span></div><ul class="rows">'+g.dishes.map(d=>rowHTML(d)).join('')+'</ul></section>';
+}
+function catHTML(c){
+  let out='';
+  if(c.groups.some(g=>g.section)){
+    const secs=[];
+    c.groups.forEach((g,gi)=>{let x=secs.find(z=>z.name===g.section); if(!x){x={name:g.section,items:[]};secs.push(x);} x.items.push(groupBlock(c,g,gi));});
+    secs.sort((a,b)=>(a.name==='Сладкие'?-1:0)-(b.name==='Сладкие'?-1:0));
+    out='<div class="split">'+secs.map(x=>'<div class="col '+(x.name==='Сладкие'?'sweet':x.name==='На день'?'day':'salty')+'"><div class="sect"><span>'+esc(x.name)+'</span><i></i></div>'+x.items.join('')+'</div>').join('')+'</div>';
+  }else{
+    out='<div class="groups">'+c.groups.map((g,gi)=>groupBlock(c,g,gi)).join('')+'</div>';
+  }
+  return '<div class="pagehead"><span class="emb">'+A[EMB[c.id]]+'</span><h2>'+esc(c.tab)+'</h2>'+
+    '<button class="btn line" type="button" data-act="randcat" data-cat="'+c.id+'">'+IC.dice+' Случайное блюдо</button></div>'+out;
+}
+
+/* ---------- поиск ---------- */
+const ALT={'картош':['картофе'],'картофе':['картош'],'творог':['творож'],'творож':['творог'],'туне':['тунц'],'тунц':['туне']};
+function stem(w){return w.length>=6?w.slice(0,-2):(w.length>=4?w.slice(0,-1):w);}
+function hit(w,arr){const s=stem(w);const vs=[s].concat(ALT[s]||[]);return vs.some(v=>arr.some(x=>x.startsWith(v)));}
+function searchHTML(){
+  const ws=words(query); let res=[];
+  if(ws.length){
+    CATS.forEach(c=>c.all.forEach(d=>{
+      const all=d._nw.concat(d._iw);
+      if(ws.every(w=>hit(w,all))){
+        const inName=ws.every(w=>hit(w,d._nw)); let why='';
+        if(!inName){const ing=d.ing.find(i=>hit(ws[0],words(i))); why=ing?(' · в составе: '+ing):'';}
+        res.push({d,inName,why});
+      }
+    }));
+    res.sort((a,b)=>(b.inName-a.inName));
+  }
+  const head='<div class="pagehead"><h2>Поиск</h2></div>';
+  if(!res.length) return head+'<div class="empty">Ничего не нашлось по запросу «'+esc(query.trim())+'». Попробуйте другое слово, например «курица», «сыр» или «гречка».</div>';
+  return head+'<ul class="results rows">'+res.map(r=>rowHTML(r.d,r.d.cat.tab+r.why)).join('')+'</ul>';
+}
+
+function render(){
+  app.innerHTML = query.trim()? searchHTML() : (route==='home'? homeHTML() : catHTML(byCat[route]));
+  updateTabs(); bindPairs();
+}
+function go(r){
+  route=r; query=''; qIn.value=''; qClr.hidden=true; closeModal();
+  render(); window.scrollTo(0,0);
+  try{history.replaceState(null,'','#'+r);}catch(e){}
+}
+
+/* ---------- «С чем подать» ---------- */
+function setPop(pair,open,pin){
+  const pop=pair.querySelector('.pop'), b=pair.querySelector('.popbtn');
+  pop.hidden=!open; b.setAttribute('aria-expanded',open?'true':'false'); pair.dataset.pinned=(open&&pin)?'1':'0';
+  const row=pair.closest('.row'); if(row) row.classList.toggle('open',open);
+}
+function closePops(except){document.querySelectorAll('.pair').forEach(p=>{if(p!==except)setPop(p,false);});}
+function bindPairs(){
+  if(!(window.matchMedia&&window.matchMedia('(hover:hover)').matches)) return;
+  document.querySelectorAll('.pair').forEach(p=>{
+    p.addEventListener('mouseenter',()=>{closePops(p);setPop(p,true,false);});
+    p.addEventListener('mouseleave',()=>{if(p.dataset.pinned!=='1')setPop(p,false);});
+  });
+}
+
+/* ---------- модальное окно ---------- */
+let stackV=[], lastFocus=null; const queues={};
+function nextRandom(catId,cur,sec){
+  const key=catId+'|'+(sec||''); let q=queues[key];
+  if(!q||!q.length){q=shuffle(byCat[catId].all.filter(d=>!sec||d.group.section===sec).map(d=>d.id)); if(q.length>1&&q[q.length-1]===cur) q.unshift(q.pop()); queues[key]=q;}
+  return q.pop();
+}
+function openModal(view){
+  if(modal.hidden){lastFocus=document.activeElement; stackV=[view]; modal.hidden=false; document.documentElement.classList.add('lock');}
+  else stackV.push(view);
+  renderModal();
+}
+function closeModal(){
+  if(modal.hidden) return;
+  modal.hidden=true; stackV=[]; document.documentElement.classList.remove('lock');
+  if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) lastFocus.focus();
+}
+function bar(){
+  return '<div class="sh-bar">'+(stackV.length>1?'<button class="icon-btn" type="button" data-act="back" aria-label="Назад">'+IC.back+'</button>':'<span></span>')+
+    '<button class="icon-btn" type="button" data-act="close" aria-label="Закрыть">'+IC.x+'</button></div>';
+}
+const srv={};
+const nb=s=>s.replace(/(\d) (?=[а-яёa-z])/gi,'$1\u00a0');
+function rnd(v){ if(v>=100) return Math.round(v/5)*5; if(v>=10) return Math.round(v); if(v>=1) return Math.round(v*2)/2; return Math.round(v*4)/4||0.25; }
+const fmt=v=>String(v).replace('.',',');
+const plural=(n,a,b,c)=>{ if(n!==Math.floor(n)) return b; const m=n%100,k=n%10; if(m>10&&m<15) return c; if(k===1) return a; if(k>=2&&k<=4) return b; return c; };
+const FORMS=[['зубчик',['зубчик','зубчика','зубчиков']],['ломтик',['ломтик','ломтика','ломтиков']],['банк',['банка','банки','банок']],['листа',['лист','листа','листьев']],['лист',['лист','листа','листьев']],['тушк',['тушка','тушки','тушек']],['головк',['головка','головки','головок']],['упаковк',['упаковка','упаковки','упаковок']],['пачк',['пачка','пачки','пачек']]];
+function scaleAmt(s,k){
+  if(k===1) return s;
+  return s.replace(/(\d+(?:[.,]\d+)?)(\s*)([а-яё]+)?/gi,(m,num,sp,word)=>{
+    const v=rnd(parseFloat(num.replace(',','.'))*k);
+    if(word){ for(const f of FORMS){ if(word.toLowerCase().startsWith(f[0])) return fmt(v)+sp+plural(v,f[1][0],f[1][1],f[1][2]); } }
+    return fmt(v)+(sp||'')+(word||'');
+  });
+}
+function ingList(d){
+  const n=srv[d.id]||d.base, k=n/d.base;
+  return '<ul class="ings">'+d.items.map(x=>'<li><span class="n">'+esc(x[0])+'</span>'+(x[1]?'<i class="l"></i><span class="a">'+esc(nb(scaleAmt(x[1],k)))+'</span>':'')+'</li>').join('')+'</ul>';
+}
+function ingBox(d,label){
+  const n=srv[d.id]||d.base;
+  return '<div class="ingbox" data-id="'+d.id+'"><div class="srvrow"><h3 class="lab">'+label+'</h3><div class="srv"><button type="button" data-act="srv" data-d="-1" data-id="'+d.id+'" aria-label="Меньше порций">−</button><span><b>'+n+'</b> '+plural(n,'порция','порции','порций')+'</span><button type="button" data-act="srv" data-d="1" data-id="'+d.id+'" aria-label="Больше порций">+</button></div></div><div class="ingl">'+ingList(d)+'</div></div>';
+}
+function plaques(d){
+  const items=[];
+  if(d.addons) items.push(['add','С чем подать','<ul class="addons">'+d.addons.map(a=>byId[a]?'<li><button type="button" data-act="dish" data-id="'+a+'">'+esc(byId[a].name)+'</button></li>':'<li><span>'+esc(a)+'</span></li>').join('')+'</ul>']);
+  if(d.sides) items.push(['side','Какой гарнир выбрать?','<ul class="addons">'+d.sides.map(a=>'<li><button type="button" data-act="dish" data-id="'+a+'">'+esc(byId[a].name)+'</button></li>').join('')+'</ul>']);
+  if(d.tips) items.push(['tip','Как улучшить?','<ul class="tips">'+d.tips.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>']);
+  if(!items.length) return '';
+  return '<div class="plqs"><div class="plqrow">'+items.map(x=>'<button class="plqb" type="button" data-act="plq" data-t="'+x[0]+'" aria-expanded="false">'+IC.plus+' '+x[1]+'</button>').join('')+'</div>'+
+    items.map(x=>'<div class="plqp" data-p="'+x[0]+'" hidden>'+x[2]+'</div>').join('')+'</div>';
+}
+function kcalHTML(d){
+  if(!d.kv) return '<div class="kcal"><b>'+d.kcal+'</b><span>ккал на 100 г</span></div>';
+  return '<div class="kvw"><button class="kcal kvb" type="button" data-act="kv" aria-expanded="false"><b>'+d.kcal+'</b><span>ккал на 100 г</span><em>варианты</em></button><div class="kvpop" hidden><h4>Калорийность по вариантам</h4><ul>'+d.kv.map(x=>'<li><span>'+esc(x[0])+'</span><b>'+x[1]+' ккал</b></li>').join('')+'</ul></div></div>';
+}
+function head(d,kick){
+  return '<div class="top-row"><div class="txt"><span class="kicker g'+(d.gi%5)+'" style="--gc:var(--gc)">'+esc(kick)+'</span><h2 id="mtitle" tabindex="-1">'+esc(d.name)+'</h2></div><div class="art">'+artG(d.cat,d.group)+'</div></div>';
+}
+function renderModal(){
+  const v=stackV[stackV.length-1]; let h=bar();
+  if(v.type==='dish'){
+    const d=byId[v.id];
+    h+=head(d,d.cat.tab+' · '+d.group.title)+
+      '<button class="btn cta block" type="button" data-act="recipe" data-id="'+d.id+'">Как готовить?</button>'+
+      plaques(d)+ingBox(d,'Состав')+
+      kcalHTML(d);
+    }else if(v.type==='recipe'){
+    const d=byId[v.id];
+    h+=head(d,'Как готовить')+
+      ingBox(d,'Что понадобится')+
+      '<h3 class="lab">Шаги</h3><ol class="steps">'+d.steps.map(s=>'<li><span>'+esc(s)+'</span></li>').join('')+'</ol>'+
+      '<button class="btn soft block" type="button" data-act="back">Назад к блюду</button>';
+  }else if(v.type==='pick'){
+    h+='<span class="kicker g0">Случайный выбор</span><h2 id="mtitle" tabindex="-1">Из какого раздела выбрать блюдо?</h2><div class="cats">'+
+      CATS.map((c,i)=>'<button class="p'+i+'" type="button" data-act="pickcat" data-cat="'+c.id+'"><span class="ca">'+A[EMB[c.id]]+'</span><span class="t">'+esc(c.tab)+'</span></button>').join('')+'</div>';
+  }else if(v.type==='pickdin'){
+    h+='<span class="kicker g2">Ужин</span><h2 id="mtitle" tabindex="-1">На неделю или на день?</h2><div class="cats">'+
+      '<button class="p0" type="button" data-act="randsec" data-sec="На неделю"><span class="ca">'+A.penne+'</span><span class="t">На неделю</span></button>'+
+      '<button class="p1" type="button" data-act="randsec" data-sec="На день"><span class="ca">'+A.dinner+'</span><span class="t">На день</span></button></div>';
+  }else if(v.type==='result'){
+    const d=byId[v.id];
+    h+='<span class="kicker g'+(d.gi%5)+'">'+esc(d.cat.tab+(v.sec?' · '+v.sec:''))+'</span><div class="res-art">'+artG(d.cat,d.group)+'</div><h2 id="mtitle" tabindex="-1">'+esc(d.name)+'</h2>'+
+      '<p class="preview">'+esc(d.ing.slice(0,6).join(', ')+(d.ing.length>6?' и другое':''))+'</p><div class="stack">'+
+      '<button class="btn cta block" type="button" data-act="other" data-cat="'+d.cat.id+'" data-sec="'+(v.sec||'')+'">Другое блюдо</button>'+
+      '<button class="btn soft block" type="button" data-act="dish" data-id="'+d.id+'">Состав и рецепт</button>'+
+      (stackV.length>1?'<button class="btn soft block" type="button" data-act="back">Другой раздел</button>':'')+'</div>';
+  }
+  sheet.innerHTML=h; sheet.scrollTop=0;
+  const t=sheet.querySelector('h2'); if(t) t.focus({preventScroll:true});
+}
+
+/* ---------- события ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');
+  if(!t){ if(!e.target.closest('.pop')) closePops(); if(e.target===modal) closeModal(); return; }
+  const a=t.dataset.act;
+  if(a!=='pop') closePops();
+  switch(a){
+    case 'route': go(t.dataset.route); break;
+    case 'dish': openModal({type:'dish',id:t.dataset.id}); break;
+    case 'recipe': openModal({type:'recipe',id:t.dataset.id}); break;
+    case 'random': openModal({type:'pick'}); break;
+    case 'randcat': case 'pickcat': if(t.dataset.cat==='dinner') openModal({type:'pickdin'}); else openModal({type:'result',id:nextRandom(t.dataset.cat,null)}); break;
+    case 'randsec': openModal({type:'result',id:nextRandom('dinner',null,t.dataset.sec),sec:t.dataset.sec}); break;
+    case 'other': { const cur=stackV[stackV.length-1].id, sec=t.dataset.sec||undefined; stackV[stackV.length-1]={type:'result',id:nextRandom(t.dataset.cat,cur,sec),sec:sec}; renderModal(); break; }
+    case 'back': if(stackV.length>1){stackV.pop();renderModal();} break;
+    case 'close': closeModal(); break;
+    case 'srv': { const dd=byId[t.dataset.id]; const cur=srv[dd.id]||dd.base; srv[dd.id]=Math.max(1,Math.min(12,cur+(+t.dataset.d)));
+      const box=t.closest('.ingbox'); const lab=box.querySelector('.lab').textContent; const tmp=document.createElement('div'); tmp.innerHTML=ingBox(dd,lab); box.replaceWith(tmp.firstChild); break; }
+    case 'plq': { const box=t.closest('.plqs'); const open=t.getAttribute('aria-expanded')==='true';
+      box.querySelectorAll('.plqb').forEach(b=>b.setAttribute('aria-expanded','false')); box.querySelectorAll('.plqp').forEach(p=>p.hidden=true);
+      if(!open){ t.setAttribute('aria-expanded','true'); box.querySelector('.plqp[data-p="'+t.dataset.t+'"]').hidden=false; } break; }
+    case 'kv': { const w=t.closest('.kvw'),p=w.querySelector('.kvpop'); p.hidden=!p.hidden; t.setAttribute('aria-expanded',p.hidden?'false':'true'); if(!p.hidden) setTimeout(()=>p.scrollIntoView({block:'nearest',behavior:'smooth'}),30); break; }
+    case 'pop': { const p=t.closest('.pair'); const open=!p.querySelector('.pop').hidden;
+      if(open&&p.dataset.pinned==='1') setPop(p,false); else {closePops(p);setPop(p,true,true);} break; }
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ if(!modal.hidden) closeModal(); else closePops(); return; }
+  if(e.key==='Tab'&&!modal.hidden){
+    const f=[...sheet.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])')].filter(x=>!x.disabled);
+    if(!f.length) return;
+    const first=f[0], last=f[f.length-1];
+    if(!sheet.contains(document.activeElement)){first.focus();e.preventDefault();}
+    else if(e.shiftKey&&document.activeElement===first){last.focus();e.preventDefault();}
+    else if(!e.shiftKey&&document.activeElement===last){first.focus();e.preventDefault();}
+  }
+});
+$('#sform').addEventListener('submit',e=>e.preventDefault());
+qIn.addEventListener('input',()=>{query=qIn.value; qClr.hidden=!query; render();});
+qClr.addEventListener('click',()=>{query=''; qIn.value=''; qClr.hidden=true; render(); qIn.focus();});
+
+buildTabs(); render();
+})();
+</script>
